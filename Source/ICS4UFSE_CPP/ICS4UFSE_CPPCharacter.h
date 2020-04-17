@@ -6,8 +6,6 @@
 #include "GameFramework/Character.h"
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
-class UInputComponent;
-
 UCLASS(config=Game)
 class AICS4UFSE_CPPCharacter : public ACharacter
 {
@@ -36,6 +34,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float playerArmour;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		int attackState;
 
 protected:
 
@@ -67,6 +68,24 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/* Left click handler */
+	void OnAttack();
+
+	/* End left click handler */
+	void EndAttack();
+
+	/* Right click handler */
+	void OnUse();
+
+	/* End right click handler */
+	void EndUse();
+
+	/* Crouch handler */
+	void OnCrouch();
+
+	/* Uncrouch handler */
+	void EndCrouch();
 
 protected:
 	// APawn interface

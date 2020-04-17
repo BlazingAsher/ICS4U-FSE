@@ -53,6 +53,8 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Set health and armour defaults
 	playerHealth = 1.0f;
 	playerArmour = 1.0f;
+
+	attackState = 0;
 }
 
 void AICS4UFSE_CPPCharacter::BeginPlay()
@@ -60,8 +62,8 @@ void AICS4UFSE_CPPCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
-	FollowCamera->RelativeLocation = FVector(0.000000, 10.000000, 25.000000);
-	FollowCamera->RelativeRotation = FRotator(90.000000, 0.000000, -90.000000);
+	FollowCamera->RelativeLocation = FVector(0.000000, 1.000000, 25.000000);  // left,right - up,down - fwd, back
+	FollowCamera->RelativeRotation = FRotator(90.000000, 0.000000, -90.000000); 
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -94,16 +96,15 @@ void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnResetVR);
 
 	// Mouse controls
-	//PlayerInputComponent->BindAction("Attack", this, &AICS4UFSE_CPPCharacter::OnAttack);
-	//PlayerInputComponent->BindAction("Use", this, &AICS4UFSE_CPPCharacter::OnUse);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnAttack);
+	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AICS4UFSE_CPPCharacter::EndAttack);
+	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnUse);
+	PlayerInputComponent->BindAction("Use", IE_Released, this, &AICS4UFSE_CPPCharacter::EndUse);
+
+	// Crouching
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AICS4UFSE_CPPCharacter::EndCrouch);
 }
-
-
-/*
-void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
-	check(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn)
-}*/
 
 void AICS4UFSE_CPPCharacter::OnResetVR()
 {
@@ -118,6 +119,36 @@ void AICS4UFSE_CPPCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector
 void AICS4UFSE_CPPCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		StopJumping();
+}
+
+void AICS4UFSE_CPPCharacter::OnAttack()
+{
+	attackState = 1;
+}
+
+void AICS4UFSE_CPPCharacter::EndAttack()
+{
+	attackState = 0;
+}
+
+void AICS4UFSE_CPPCharacter::OnUse()
+{
+	
+}
+
+void AICS4UFSE_CPPCharacter::EndUse()
+{
+
+}
+
+void AICS4UFSE_CPPCharacter::OnCrouch()
+{
+	Crouch();
+}
+
+void AICS4UFSE_CPPCharacter::EndCrouch()
+{
+	UnCrouch();
 }
 
 void AICS4UFSE_CPPCharacter::TurnAtRate(float Rate)
