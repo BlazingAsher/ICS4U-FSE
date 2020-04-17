@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
+class UInputComponent;
+
 UCLASS(config=Game)
 class AICS4UFSE_CPPCharacter : public ACharacter
 {
@@ -68,6 +70,7 @@ protected:
 
 protected:
 	// APawn interface
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 

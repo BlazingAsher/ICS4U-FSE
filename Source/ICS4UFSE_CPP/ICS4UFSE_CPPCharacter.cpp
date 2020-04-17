@@ -67,6 +67,7 @@ void AICS4UFSE_CPPCharacter::BeginPlay()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
+
 void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -91,8 +92,18 @@ void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnResetVR);
+
+	// Mouse controls
+	//PlayerInputComponent->BindAction("Attack", this, &AICS4UFSE_CPPCharacter::OnAttack);
+	//PlayerInputComponent->BindAction("Use", this, &AICS4UFSE_CPPCharacter::OnUse);
 }
 
+
+/*
+void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
+	check(PlayerInputComponent);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn)
+}*/
 
 void AICS4UFSE_CPPCharacter::OnResetVR()
 {
