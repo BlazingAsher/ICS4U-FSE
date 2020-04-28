@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Engine/Engine.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AICS4UFSE_CPPCharacter
@@ -55,6 +56,8 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	playerArmour = 1.0f;
 
 	attackState = 0;
+
+	playerEnergy = 0.5f;
 }
 
 void AICS4UFSE_CPPCharacter::BeginPlay()
@@ -64,6 +67,9 @@ void AICS4UFSE_CPPCharacter::BeginPlay()
 	FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
 	FollowCamera->RelativeLocation = FVector(0.000000, 1.000000, 25.000000);  // left,right - up,down - fwd, back
 	FollowCamera->RelativeRotation = FRotator(90.000000, 0.000000, -90.000000); 
+
+	EnergyRegenTimerDelegate.BindUFunction(this, FName("AddEnergy"), 0.1f);
+	GetWorldTimerManager().SetTimer(EnergyRegenTimerHandle, EnergyRegenTimerDelegate, 5.f, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -197,5 +203,19 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage) {
 	if (playerArmour < 0) {
 		playerHealth += playerArmour;
 		playerArmour = 0;
+	}
+}
+
+void AICS4UFSE_CPPCharacter::AddEnergy(float Energy) {
+	playerEnergy = playerEnergy + Energy <= 1.0f ? playerEnergy + Energy : 1.0f;
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Added energy!");
+	}
+}
+
+void AICS4UFSE_CPPCharacter::RemoveEnergy(float Energy) {
+	playerEnergy = playerEnergy - Energy >= 0.0f ? playerEnergy - Energy : 0.0f;
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Removed energy!");
 	}
 }

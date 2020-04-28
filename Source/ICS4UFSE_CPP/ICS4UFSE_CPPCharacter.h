@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "TimerManager.h"
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -35,8 +36,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float playerArmour;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 		int attackState;
+
+	UPROPERTY(BlueprintReadOnly)
+		float playerEnergy;
 
 protected:
 
@@ -93,6 +97,10 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
+protected:
+	FTimerHandle EnergyRegenTimerHandle;
+	FTimerDelegate EnergyRegenTimerDelegate;
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -100,6 +108,15 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	/** Apply damage to the player */
+	UFUNCTION()
 	void ApplyDamage(float Damage);
+
+	/** Add attack energy to the player **/
+	UFUNCTION()
+	void AddEnergy(float Energy);
+
+	/** Remove attack energy from the player **/
+	UFUNCTION()
+	void RemoveEnergy(float Energy);
 };
 
