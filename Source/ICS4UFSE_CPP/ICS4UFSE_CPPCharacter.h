@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TimerManager.h"
 #include "ICS4UFSE_CPPCharacter.generated.h"
+#include "Armour.h"
 
 UCLASS(config=Game)
 class AICS4UFSE_CPPCharacter : public ACharacter
@@ -100,6 +101,8 @@ protected:
 protected:
 	FTimerHandle EnergyRegenTimerHandle;
 	FTimerDelegate EnergyRegenTimerDelegate;
+
+	Armour PlayerArmour;
 
 public:
 	/** Returns CameraBoom subobject **/

@@ -26,10 +26,13 @@ void ASkulkin::Tick(float DeltaTime)
 
 	FVector PlayerPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(), ThisPos = GetActorLocation();
 	FVector PosDiff = PlayerPos - ThisPos;
+	float magnitude = PosDiff.Size();
 
 	FRotator ThisRotation = { std::fmod(std::atan2(PosDiff.X, PosDiff.Z) * 180.0f / 3.1415926535897932f + 360.0f, 360.0f), std::fmod(std::atan2(PosDiff.Y, PosDiff.X) * 180.0f / 3.1415926535897932f + 360.0f, 360.0f), 0.0f };
 	SetActorRotation(ThisRotation);
-	SetActorLocation(ThisPos);
+
+	FVector MovementVector = ThisRotation.RotateVector({ 1,0,0 });
+	SetActorLocation(ThisPos - MovementVector * 0.25);
 	//ThisRotation.X, ThisRotation.Y, ThisRotation.Z
 	//UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f\n"), ThisRotation.Roll, ThisRotation.Pitch, ThisRotation.Yaw);
 

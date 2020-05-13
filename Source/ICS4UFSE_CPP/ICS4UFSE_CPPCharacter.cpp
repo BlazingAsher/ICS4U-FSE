@@ -199,11 +199,14 @@ void AICS4UFSE_CPPCharacter::MoveRight(float Value)
 }
 
 void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage) {
-	playerArmour -= Damage;
+	playerHealth -= PlayerArmour - Damage;
+	if (playerHealth < 0)
+		playerHealth = 0;
+	/*playerArmour -= Damage;
 	if (playerArmour < 0) {
 		playerHealth += playerArmour;
 		playerArmour = 0;
-	}
+	}*/
 }
 
 void AICS4UFSE_CPPCharacter::AddEnergy(float Energy) {
