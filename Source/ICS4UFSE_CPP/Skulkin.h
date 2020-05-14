@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include<cmath>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Skulkin.generated.h"

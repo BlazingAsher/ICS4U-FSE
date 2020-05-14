@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "TimerManager.h"
-#include "ICS4UFSE_CPPCharacter.generated.h"
 #include "Armour.h"
+#include "ICS4UFSE_CPPCharacter.generated.h"
 
 UCLASS(config=Game)
 class AICS4UFSE_CPPCharacter : public ACharacter
