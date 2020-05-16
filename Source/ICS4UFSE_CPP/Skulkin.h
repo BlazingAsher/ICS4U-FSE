@@ -24,4 +24,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	// Health of the Skulkin
+	float hp, mxhp;
+
 };

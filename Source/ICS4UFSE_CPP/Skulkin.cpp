@@ -8,6 +8,9 @@ ASkulkin::ASkulkin()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// Sets the max health and current health
+	mxhp = 10;
+	hp = mxhp;
 
 }
 
@@ -32,8 +35,6 @@ void ASkulkin::Tick(float DeltaTime)
 
 	FVector MovementVector = ThisRotation.RotateVector({ 1,0,0 });
 	SetActorLocation(ThisPos - MovementVector * 0.25);
-	//ThisRotation.X, ThisRotation.Y, ThisRotation.Z
-	//UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f\n"), ThisRotation.Roll, ThisRotation.Pitch, ThisRotation.Yaw);
 
 }
 

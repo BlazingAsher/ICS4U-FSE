@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TimerManager.h"
 #include "Armour.h"
+#include "DmgType.h"
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -112,7 +113,7 @@ public:
 
 	/** Apply damage to the player */
 	UFUNCTION()
-	void ApplyDamage(float Damage);
+	void ApplyDamage(float Damage, DmgType Type);
 
 	/** Add attack energy to the player **/
 	UFUNCTION()

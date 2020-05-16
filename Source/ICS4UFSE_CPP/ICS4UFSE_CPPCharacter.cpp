@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "ICS4UFSE_CPPCharacter.h"
+#include <algorithm>
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -198,10 +199,17 @@ void AICS4UFSE_CPPCharacter::MoveRight(float Value)
 	}
 }
 
-void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage) {
-	playerHealth -= PlayerArmour - Damage;
-	if (playerHealth < 0)
-		playerHealth = 0;
+void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type)
+{
+	if (Type < DmgType::DmgFall)
+	{
+		// apply armour damage
+		playerHealth -= PlayerArmour - Damage;
+		if (playerHealth < 0)
+			playerHealth = 0;
+	}
+	else
+		playerHealth = std::max(0.0f, playerHealth - Damage);
 	/*playerArmour -= Damage;
 	if (playerArmour < 0) {
 		playerHealth += playerArmour;
