@@ -2,8 +2,10 @@
 
 #pragma once
 
-#include<cmath>
 #include "CoreMinimal.h"
+#include<cmath>
+#include "DmgType.h"
+#include "Armour.h"
 #include "GameFramework/Actor.h"
 #include "Skulkin.generated.h"
 
@@ -24,8 +26,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Applies damage
+	virtual void ApplyDamage(float Dmg, DmgType Type);
+
+	// Warns other enemies of player
+	virtual void Warn();
+
 protected:
 	// Health of the Skulkin
 	float hp, mxhp;
+	// Armour of the Skulkin
+	Armour SkulkinArmour;
+	// Warning variables for player prescence
+	bool WarnInited;
+	unsigned int WarnTimer;
 
 };
