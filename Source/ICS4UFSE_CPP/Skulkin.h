@@ -32,6 +32,25 @@ public:
 	// Warns other enemies of player
 	virtual void Warn();
 
+	// Be warned of player presence
+	virtual void BeWarned(const FVector& PlayerPos);
+
+	// Getters and setters
+	float HP();
+	void HP(float hp);
+
+	float MaxHP();
+	void MaxHP(float mxhp);
+
+	Armour SArmour();
+	void SArmour(Armour SkulkinArmour);
+
+	bool WarnInit();
+	void WarnInit(bool b);
+
+	unsigned int WarnTmr();
+	void WarnTmr(unsigned int tmr);
+
 protected:
 	// Health of the Skulkin
 	float hp, mxhp;

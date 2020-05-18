@@ -5,6 +5,12 @@
 #include <algorithm>
 #include <cstdlib>
 
+template<typename B,typename D>
+bool is_base_of(const B& b, const D& d)
+{
+	return std::is_base_of<B, D>::value;
+}
+
 // Sets default values
 ASkulkin::ASkulkin()
 {
@@ -51,6 +57,32 @@ void ASkulkin::Tick(float DeltaTime)
 		}
 	}
 
+	if (WarnInited && WarnTimer == 0)
+	{
+		// Get all of the actors and warn them if they are also a Skulkin
+		GetWorld();
+		WarnInited = false;
+
+		AActor* begin, * end;
+		ASkulkin* sk;
+
+		for (; begin != end; ++begin)
+		{
+			if (is_base_of(ASkulkin(), *begin))
+			{
+				// cast the pointer
+				sk = (ASkulkin*)begin;
+				sk->BeWarned(PlayerPos - sk->GetActorLocation());
+				
+			}
+		}
+
+	}
+
+	// Decrease the warning timer
+	if (WarnInited && WarnTimer > 0)
+		--WarnTimer;
+
 	//FVector MovementVector = ThisRotation.RotateVector({ 1,0,0 });
 	//SetActorLocation(ThisPos - MovementVector * 0.25);
 
@@ -79,4 +111,60 @@ void ASkulkin::Warn()
 {
 	WarnTimer = 300;
 	WarnInited = true;
+}
+
+void ASkulkin::BeWarned(const FVector& PlayerPos)
+{
+	SetActorRotation(PlayerPos.ToOrientationRotator());
+}
+
+// Getters and setters
+float ASkulkin::HP()
+{
+	return hp;
+}
+
+void ASkulkin::HP(float hp)
+{
+	this->hp = hp;
+}
+
+float ASkulkin::MaxHP()
+{
+	return mxhp;
+}
+
+void ASkulkin::MaxHP(float hp)
+{
+	this->mxhp = mxhp;
+}
+
+Armour ASkulkin::SArmour()
+{
+	return SkulkinArmour;
+}
+
+void ASkulkin::SArmour(Armour SkulkinArmour)
+{
+	this->SkulkinArmour = SkulkinArmour;
+}
+
+bool ASkulkin::WarnInit()
+{
+	return WarnInited;
+}
+
+void ASkulkin::WarnInit(bool b)
+{
+	WarnInited = b;
+}
+
+unsigned int ASkulkin::WarnTmr()
+{
+	return WarnTimer;
+}
+
+void ASkulkin::WarnTmr(unsigned int tmr)
+{
+	WarnTimer = tmr;
 }
