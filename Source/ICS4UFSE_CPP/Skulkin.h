@@ -18,6 +18,15 @@ public:
 	// Sets default values for this actor's properties
 	ASkulkin();
 
+	// field of view
+	static float FOV;
+
+	// distance for warning others of player precense
+	static float WarnDist;
+
+	// distance that it can detect a player
+	static float ViewDist;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,6 +60,9 @@ public:
 	unsigned int WarnTmr();
 	void WarnTmr(unsigned int tmr);
 
+	bool HasTarg();
+	void HasTarg(bool HasTarget);
+
 protected:
 	// Health of the Skulkin
 	float hp, mxhp;
@@ -59,5 +71,6 @@ protected:
 	// Warning variables for player prescence
 	bool WarnInited;
 	unsigned int WarnTimer;
+	bool HasTarget;
 
 };
