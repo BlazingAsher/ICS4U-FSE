@@ -21,7 +21,7 @@ public:
     // gets the toughness of the armour
     float Toughness();
     // sets the toughness of the armour
-    float Toughness(float Tough);
+    void Toughness(float Tough);
 
     // calculates damage dealt onto the player
     float CalcDmg(float Orig);

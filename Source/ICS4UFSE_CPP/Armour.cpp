@@ -16,9 +16,9 @@ float Armour::Hardness()
     return Hard;
 }
 
-void Armour::Hardness(float Hard)
+void Armour::Hardness(float hard)
 {
-    this->Hard = Hard;
+    Hard = hard;
 }
 
 float Armour::Toughness()
@@ -26,9 +26,9 @@ float Armour::Toughness()
     return Tough;
 }
 
-void Armour::Toughness(float Tough)
+void Armour::Toughness(float tough)
 {
-    this->Tough = Tough;
+    Tough = tough;
 }
 
 float Armour::CalcDmg(float Orig)

@@ -29,7 +29,7 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
@@ -37,7 +37,7 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
 	// Create a follow camera
@@ -46,10 +46,10 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	//FollowCamera->SetupAttachment(GetMesh(), FName("head"));
 	//FollowCamera->AttachTo(GetMesh(), FName("head"));
 	//FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
-	
+
 	FollowCamera->bUsePawnControlRotation = true; // Camera does not rotate relative to arm
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
+	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character)
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	// Set health and armour defaults
@@ -64,10 +64,10 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 void AICS4UFSE_CPPCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
 	FollowCamera->RelativeLocation = FVector(0.000000, 1.000000, 25.000000);  // left,right - up,down - fwd, back
-	FollowCamera->RelativeRotation = FRotator(90.000000, 0.000000, -90.000000); 
+	FollowCamera->RelativeRotation = FRotator(90.000000, 0.000000, -90.000000);
 
 	EnergyRegenTimerDelegate.BindUFunction(this, FName("AddEnergy"), 0.1f);
 	GetWorldTimerManager().SetTimer(EnergyRegenTimerHandle, EnergyRegenTimerDelegate, 5.f, true);
@@ -140,7 +140,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 
 void AICS4UFSE_CPPCharacter::OnUse()
 {
-	
+
 }
 
 void AICS4UFSE_CPPCharacter::EndUse()
@@ -191,16 +191,17 @@ void AICS4UFSE_CPPCharacter::MoveRight(float Value)
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
+
+		// get right vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
 }
 
-void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type)
+void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage)
 {
+    /*DmgType Type=5;
 	if (Type < DmgType::DmgFall)
 	{
 		// apply armour damage
@@ -209,7 +210,7 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type)
 			playerHealth = 0;
 	}
 	else
-		playerHealth = std::max(0.0f, playerHealth - Damage);
+		playerHealth = std::max(0.0f, playerHealth - Damage);*/
 	/*playerArmour -= Damage;
 	if (playerArmour < 0) {
 		playerHealth += playerArmour;
