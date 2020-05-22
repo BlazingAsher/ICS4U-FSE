@@ -2,6 +2,10 @@
 
 #include "ICS4UFSE_CPPCharacter.h"
 #include <algorithm>
+#include <cmath>
+#include "Kismet/GameplayStatics.h"
+#include "Door.h"
+#include "DistPred.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -140,6 +144,16 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 
 void AICS4UFSE_CPPCharacter::OnUse()
 {
+
+	TArray<AActor*>actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), actors);
+
+	// Get the closest door
+	actors.Sort(DistPred(GetActorLocation()));
+	ADoor& closest = (ADoor&)**actors.begin();
+
+	if (std::acos((closest.GetActorLocation() - GetActorLocation()) | GetActorRotation().Vector() / (closest.GetActorLocation() - GetActorLocation()).Size()) < 60 && (closest.GetActorLocation() - GetActorLocation()).Size() < 1.5)
+		closest.ToggleDoor();
 
 }
 

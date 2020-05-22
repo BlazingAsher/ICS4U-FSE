@@ -9,8 +9,10 @@ ADoor::ADoor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Temporary pivot for the door
-	Pivot = GetActorLocation() - FVector{ 0.5f, 0.0f, 0.0f };
+	// Set default animating and open state
+	IsAnimating = 0;
+	IsOpen = 0;
+
 	// Set default degrees animated
 	DegsAnimated = 0;
 
@@ -71,7 +73,6 @@ void ADoor::ToggleDoor()
 }
 
 // Getters and setters
-
 bool ADoor::Opened()
 {
 	return IsOpen;

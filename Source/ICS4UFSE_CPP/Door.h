@@ -57,7 +57,7 @@ protected:
 	// How many degrees the door turned
 	float DegsAnimated;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere)
 	// The point where the door is turned about
 	FVector Pivot;
 
