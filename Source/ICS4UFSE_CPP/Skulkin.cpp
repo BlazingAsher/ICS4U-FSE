@@ -60,20 +60,6 @@ void ASkulkin::Tick(float DeltaTime)
 
 }
 
-// Applies damage
-void ASkulkin::ApplyDamage(float Dmg, DmgType Type)
-{
-	if (Type < DmgType::DmgFall)
-	{
-		// apply armour damage
-		hp = SkulkinArmour - Dmg;
-		if (hp < 0)
-			hp = 0;
-	}
-	else
-		hp = std::max(0.0f, hp - Dmg);
-}
-
 // Warns other enemies of player
 void ASkulkin::Warn()
 {

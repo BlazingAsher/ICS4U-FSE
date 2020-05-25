@@ -6,6 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Door.h"
 #include "DistPred.h"
+#include "Enemy.h"
+#include "Templates/SubclassOf.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -124,12 +126,12 @@ void AICS4UFSE_CPPCharacter::OnResetVR()
 
 void AICS4UFSE_CPPCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
-		Jump();
+	Jump();
 }
 
 void AICS4UFSE_CPPCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
-		StopJumping();
+	StopJumping();
 }
 
 void AICS4UFSE_CPPCharacter::OnAttack()
@@ -139,7 +141,32 @@ void AICS4UFSE_CPPCharacter::OnAttack()
 
 void AICS4UFSE_CPPCharacter::EndAttack()
 {
+
 	attackState = 0;
+
+	TArray<AActor*>actors;
+	AEnemy* aep;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TSubClassOf<AActor>(AEnemy::StaticClass()), actors);
+
+	FVector EnemyPos, ThisPos = GetActorLocation(), PosDiff;
+
+	for (AActor* actptr : actors)
+	{
+		aep = (AEnemy*)actptr;
+		
+		EnemyPos = aep->GetActorLocation();
+		PosDiff = EnemyPos - ThisPos;
+
+		if (PosDiff.Size() < 3 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 60)
+		{
+			// deal damage to the enemy
+			aep->ApplyDamage(0.5f, DmgType::DmgMelee);
+			// knock the enemy back a bit
+			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 0.5f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 1) + ThisPos);
+		}
+
+	}
+
 }
 
 void AICS4UFSE_CPPCharacter::OnUse()

@@ -3,18 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enemy.h"
+#include<cmath>
+#include "Armour.h"
+#include "DmgType.h"
 #include "GameFramework/Actor.h"
-#include "Skulkin.generated.h"
+#include "Enemy.generated.h"
 
 UCLASS()
-class ICS4UFSE_CPP_API ASkulkin : public AEnemy
+class ICS4UFSE_CPP_API AEnemy : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASkulkin();
+	AEnemy();
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,12 +26,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Warns other enemies of player
-	virtual void Warn();
+	// Applies damage
+	virtual void ApplyDamage(float Dmg, DmgType Type);
 
 protected:
-	// Warning variables for player prescence
-	bool WarnInited;
-	unsigned int WarnTimer;
+
+	// Health of the enemy
+	float hp, mxhp;
+
+	// Armour of the enemy
+	Armour armour;
 
 };
