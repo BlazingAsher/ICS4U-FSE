@@ -38,11 +38,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float playerArmour;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		int attackState;
 
 	UPROPERTY(BlueprintReadOnly)
 		float playerEnergy;
+
+	UPROPERTY(BlueprintReadOnly)
+		int exp;
 
 protected:
 
@@ -122,5 +125,18 @@ public:
 	/** Remove attack energy from the player **/
 	UFUNCTION()
 	void RemoveEnergy(float Energy);
+
+	UFUNCTION()
+	int GetExp();
+
+	UFUNCTION()
+	int GetLvl();
+
+	UFUNCTION()
+	int GetExpToNextLvl();
+
+	UFUNCTION()
+	int GetNextLvlRequiredExp();
+
 };
 

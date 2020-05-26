@@ -3,20 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include<cmath>
-#include "Armour.h"
-#include "DmgType.h"
+#include "Enemy.h"
 #include "GameFramework/Actor.h"
-#include "Enemy.generated.h"
+#include "Serpentine.generated.h"
 
 UCLASS()
-class ICS4UFSE_CPP_API AEnemy : public AActor
+class ICS4UFSE_CPP_API ASerpentine : public AEnemy
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AEnemy();
+	ASerpentine();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,22 +23,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Applies damage
-	virtual void ApplyDamage(float Dmg, DmgType Type);
-
-protected:
-
-	// Health of the enemy
-	float hp, mxhp;
-
-	// Armour of the enemy
-	Armour armour;
-
-	// Experience reward
-	int exp;
-
-	// Maximum movement speed
-	float ms;
 
 };

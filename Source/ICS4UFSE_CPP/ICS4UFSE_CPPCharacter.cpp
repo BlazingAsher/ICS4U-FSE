@@ -59,6 +59,8 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	// Set health and armour defaults
+	exp = 0;
+
 	playerHealth = 1.0f;
 	playerArmour = 1.0f;
 
@@ -146,7 +148,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 
 	TArray<AActor*>actors;
 	AEnemy* aep;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TSubClassOf<AActor>(AEnemy::StaticClass()), actors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TSubclassOf<AActor>(AEnemy::StaticClass()), actors);
 
 	FVector EnemyPos, ThisPos = GetActorLocation(), PosDiff;
 
@@ -271,4 +273,31 @@ void AICS4UFSE_CPPCharacter::RemoveEnergy(float Energy) {
 	if (GEngine) {
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Removed energy!");
 	}
+}
+
+int AICS4UFSE_CPPCharacter::GetExp()
+{
+	return exp;
+}
+
+int AICS4UFSE_CPPCharacter::GetLvl()
+{
+	using namespace std;
+	double x = exp;
+	if (x == 0)
+		return 0;
+	else
+		return(int)ceil(cbrt(x / 2 + sqrt(27 * x * x - 4) / 6 / sqrt(3)) + cbrt(x / 2 - sqrt(27 * x * x - 4) / 6 / sqrt(3)) - 1);
+}
+
+int AICS4UFSE_CPPCharacter::GetExpToNextLvl()
+{
+	int lvl = GetLvl() + 1;
+	return lvl * lvl * lvl + 3 * lvl * lvl + 2 * lvl - exp;
+}
+
+int AICS4UFSE_CPPCharacter::GetNextLvlRequiredExp()
+{
+	int lvl = GetLvl();
+	return 3 * lvl * lvl + 9 * lvl + 6;
 }
