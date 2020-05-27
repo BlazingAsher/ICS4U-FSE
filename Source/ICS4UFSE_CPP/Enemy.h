@@ -27,7 +27,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Applies damage
-	virtual void ApplyDamage(float Dmg, DmgType Type);
+	virtual void ApplyDamage(float Dmg, DmgType Type, AActor* src = nullptr);
+
+	// Destroys the enemy
+	virtual void Destroy(bool x = false, bool y = true);
+
+	// Get the last actor that attacked this enemy
+	AActor* GetLastAttackedBy();
 
 protected:
 
@@ -42,5 +48,8 @@ protected:
 
 	// Maximum movement speed
 	float ms;
+
+	// Last attacked by
+	AActor* lab;
 
 };

@@ -38,7 +38,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float playerArmour;
 
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		int attackState;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -116,7 +116,7 @@ public:
 
 	/** Apply damage to the player */
 	UFUNCTION()
-	void ApplyDamage(float Damage);
+		void ApplyDamage(float Damage, DmgType Type = DmgType::DmgMelee, AActor* src = nullptr);
 
 	/** Add attack energy to the player **/
 	UFUNCTION()
@@ -138,5 +138,7 @@ public:
 	UFUNCTION()
 	int GetNextLvlRequiredExp();
 
-};
+	UFUNCTION()
+	void AddExp(int x);
 
+};

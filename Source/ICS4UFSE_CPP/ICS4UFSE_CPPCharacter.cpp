@@ -159,12 +159,14 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		EnemyPos = aep->GetActorLocation();
 		PosDiff = EnemyPos - ThisPos;
 
-		if (PosDiff.Size() < 3 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 60)
+		if (PosDiff.Size() < 3000 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 3.1415926535897932 / 3)
 		{
 			// deal damage to the enemy
-			aep->ApplyDamage(0.5f, DmgType::DmgMelee);
+			aep->ApplyDamage(0.5f, DmgType::DmgMelee, this);
 			// knock the enemy back a bit
-			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 0.5f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 1) + ThisPos);
+			aep->SetActorRotation(aep->GetActorRotation());
+			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 2.0f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 10) + ThisPos);
+
 		}
 
 	}
@@ -174,6 +176,11 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 void AICS4UFSE_CPPCharacter::OnUse()
 {
 
+}
+
+void AICS4UFSE_CPPCharacter::EndUse()
+{
+
 	TArray<AActor*>actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), actors);
 
@@ -181,13 +188,14 @@ void AICS4UFSE_CPPCharacter::OnUse()
 	actors.Sort(DistPred(GetActorLocation()));
 	ADoor& closest = (ADoor&)**actors.begin();
 
-	if (std::acos((closest.GetActorLocation() - GetActorLocation()) | GetActorRotation().Vector() / (closest.GetActorLocation() - GetActorLocation()).Size()) < 60 && (closest.GetActorLocation() - GetActorLocation()).Size() < 1.5)
+	if (GEngine) {
+		FString fs;
+		fs.AppendInt((closest.GetActorLocation() - GetActorLocation()).Size());
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, fs);
+	}
+
+	if (std::acos((((closest.GetActorLocation() - GetActorLocation()) | GetActorRotation().Vector()) / (closest.GetActorLocation() - GetActorLocation()).Size()))< 3.1415926535897932 / 3 && (closest.GetActorLocation() - GetActorLocation()).Size() < 300)
 		closest.ToggleDoor();
-
-}
-
-void AICS4UFSE_CPPCharacter::EndUse()
-{
 
 }
 
@@ -242,9 +250,8 @@ void AICS4UFSE_CPPCharacter::MoveRight(float Value)
 	}
 }
 
-void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage)
+void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src)
 {
-    /*DmgType Type=5;
 	if (Type < DmgType::DmgFall)
 	{
 		// apply armour damage
@@ -253,7 +260,7 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage)
 			playerHealth = 0;
 	}
 	else
-		playerHealth = std::max(0.0f, playerHealth - Damage);*/
+		playerHealth = std::max(0.0f, playerHealth - Damage);
 	/*playerArmour -= Damage;
 	if (playerArmour < 0) {
 		playerHealth += playerArmour;
@@ -300,4 +307,9 @@ int AICS4UFSE_CPPCharacter::GetNextLvlRequiredExp()
 {
 	int lvl = GetLvl();
 	return 3 * lvl * lvl + 9 * lvl + 6;
+}
+
+void AICS4UFSE_CPPCharacter::AddExp(int x)
+{
+	exp += x;
 }

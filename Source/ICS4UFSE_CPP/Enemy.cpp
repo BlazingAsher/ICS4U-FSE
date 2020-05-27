@@ -4,12 +4,20 @@
 #include "Enemy.h"
 #include <algorithm>
 #include <cstdlib>
+#include <ICS4UFSE_CPP\ICS4UFSE_CPPCharacter.h>
 
 // Sets default values
 AEnemy::AEnemy()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// By default, the armour is zero
+	armour = Armour();
+
+	// this is temporary, and should be in subclasses
+	mxhp = 10;
+	hp = mxhp;
 
 }
 
@@ -30,13 +38,23 @@ void AEnemy::Tick(float DeltaTime)
 
 }
 
-// Applies damage
-void AEnemy::ApplyDamage(float Dmg, DmgType Type)
+// Destroys the enemy
+void AEnemy::Destroy(bool x, bool y)
 {
+	if (dynamic_cast<AICS4UFSE_CPPCharacter*>(lab))
+		((AICS4UFSE_CPPCharacter*)lab)->AddExp(exp);
+	Super::Destroy(x, y);
+}
+
+// Applies damage
+void AEnemy::ApplyDamage(float Dmg, DmgType Type, AActor* src)
+{
+	if (src)
+		lab = src;
 	if (Type < DmgType::DmgFall)
 	{
 		// apply armour damage
-		hp = armour - Dmg;
+		hp -= armour - Dmg;
 		if (hp < 0)
 			hp = 0;
 	}
