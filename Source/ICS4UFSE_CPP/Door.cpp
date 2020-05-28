@@ -33,7 +33,7 @@ void ADoor::Tick(float DeltaTime)
 	if (IsAnimating)
 	{
 		// test if animation should be finished
-		if (DegsAnimated < 90)
+		if (DegsAnimated < MaxTurn)
 		{
 			// gets the location and rotation
 			FRotator ThisRot = GetActorRotation();

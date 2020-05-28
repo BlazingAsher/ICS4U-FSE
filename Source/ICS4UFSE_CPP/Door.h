@@ -59,6 +59,10 @@ protected:
 	float DegsAnimated;
 
 	UPROPERTY(EditAnywhere)
+	// The most that the door will turn
+	float MaxTurn;
+
+	UPROPERTY(EditAnywhere)
 	// The point where the door is turned about
 	FVector Pivot;
 

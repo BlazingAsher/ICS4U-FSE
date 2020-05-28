@@ -159,10 +159,10 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		EnemyPos = aep->GetActorLocation();
 		PosDiff = EnemyPos - ThisPos;
 
-		if (PosDiff.Size() < 3000 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 3.1415926535897932 / 3)
+		if (PosDiff.Size() < 300 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 3.1415926535897932 / 3)
 		{
 			// deal damage to the enemy
-			aep->ApplyDamage(GetLvl(), DmgType::DmgMelee, this);
+			aep->ApplyDamage(GetLvl() + 1, DmgType::DmgMelee, this);
 			// knock the enemy back a bit
 			aep->SetActorRotation(aep->GetActorRotation());
 			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 2.0f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 10) + ThisPos);

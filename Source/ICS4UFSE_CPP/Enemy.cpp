@@ -24,7 +24,7 @@ AEnemy::AEnemy()
 	// this is temporary, and should be in subclasses
 	mxhp = 10;
 	hp = mxhp;
-	exp = 5;
+	exp = 10;
 
 }
 
