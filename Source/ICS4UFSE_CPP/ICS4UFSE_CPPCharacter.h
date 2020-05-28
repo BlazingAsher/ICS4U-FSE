@@ -47,6 +47,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int exp;
 
+	UPROPERTY(BlueprintReadOnly)
+		float ExpPercent;
+
 protected:
 
 	/** Resets HMD orientation in VR. */
@@ -140,5 +143,8 @@ public:
 
 	UFUNCTION()
 	void AddExp(int x);
+
+	UFUNCTION()
+	float GetExpPercent();
 
 };

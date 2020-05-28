@@ -52,4 +52,10 @@ protected:
 	// Last attacked by
 	AActor* lab;
 
+	// Damage dealt by the enemy
+	float MinDmg, MaxDmg;
+
+	// Damage knockback
+	float DmgKnockback;
+
 };

@@ -162,7 +162,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		if (PosDiff.Size() < 3000 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 3.1415926535897932 / 3)
 		{
 			// deal damage to the enemy
-			aep->ApplyDamage(0.5f, DmgType::DmgMelee, this);
+			aep->ApplyDamage(GetLvl(), DmgType::DmgMelee, this);
 			// knock the enemy back a bit
 			aep->SetActorRotation(aep->GetActorRotation());
 			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 2.0f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 10) + ThisPos);
@@ -187,12 +187,6 @@ void AICS4UFSE_CPPCharacter::EndUse()
 	// Get the closest door
 	actors.Sort(DistPred(GetActorLocation()));
 	ADoor& closest = (ADoor&)**actors.begin();
-
-	if (GEngine) {
-		FString fs;
-		fs.AppendInt((closest.GetActorLocation() - GetActorLocation()).Size());
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, fs);
-	}
 
 	if (std::acos((((closest.GetActorLocation() - GetActorLocation()) | GetActorRotation().Vector()) / (closest.GetActorLocation() - GetActorLocation()).Size()))< 3.1415926535897932 / 3 && (closest.GetActorLocation() - GetActorLocation()).Size() < 300)
 		closest.ToggleDoor();
@@ -294,7 +288,7 @@ int AICS4UFSE_CPPCharacter::GetLvl()
 	if (x == 0)
 		return 0;
 	else
-		return(int)ceil(cbrt(x / 2 + sqrt(27 * x * x - 4) / 6 / sqrt(3)) + cbrt(x / 2 - sqrt(27 * x * x - 4) / 6 / sqrt(3)) - 1);
+		return(int)floor(cbrt(x / 2 + sqrt(27 * x * x - 4) / 6 / sqrt(3)) + cbrt(x / 2 - sqrt(27 * x * x - 4) / 6 / sqrt(3)) - 1);
 }
 
 int AICS4UFSE_CPPCharacter::GetExpToNextLvl()
@@ -312,4 +306,11 @@ int AICS4UFSE_CPPCharacter::GetNextLvlRequiredExp()
 void AICS4UFSE_CPPCharacter::AddExp(int x)
 {
 	exp += x;
+
+	ExpPercent = 1 - (float)GetExpToNextLvl() / GetNextLvlRequiredExp();
+}
+
+float AICS4UFSE_CPPCharacter::GetExpPercent()
+{
+	return ExpPercent;
 }

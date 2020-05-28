@@ -52,6 +52,7 @@ protected:
 	bool IsAnimating;
 
 	// Direction for opening the door
+	UPROPERTY(EditAnywhere)
 	bool YawPos;
 
 	// How many degrees the door turned

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ICS4UFSE_CPP\ICS4UFSE_CPPCharacter.h>
+#include <Runtime\Engine\Classes\Engine\Engine.h>
 
 // Sets default values
 AEnemy::AEnemy()
@@ -15,9 +16,15 @@ AEnemy::AEnemy()
 	// By default, the armour is zero
 	armour = Armour();
 
+	// Default damage values
+	MinDmg = 0.125;
+	MaxDmg = 0.25;
+	DmgKnockback = 10;
+
 	// this is temporary, and should be in subclasses
 	mxhp = 10;
 	hp = mxhp;
+	exp = 5;
 
 }
 
