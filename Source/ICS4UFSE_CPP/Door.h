@@ -63,6 +63,10 @@ protected:
 	float MaxTurn;
 
 	UPROPERTY(EditAnywhere)
+	// The weight determines how fast the door turns
+	float Weight;
+
+	UPROPERTY(EditAnywhere)
 	// The point where the door is turned about
 	FVector Pivot;
 
