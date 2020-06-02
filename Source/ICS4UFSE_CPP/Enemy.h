@@ -36,25 +36,29 @@ public:
 	AActor* GetLastAttackedBy();
 
 protected:
-
+	UPROPERTY(EditAnywhere)
 	// Health of the enemy
-	float hp, mxhp;
+	float hp = 10, mxhp = 10;
 
 	// Armour of the enemy
 	Armour armour;
 
+	UPROPERTY(EditAnywhere)
 	// Experience reward
-	int exp;
+	int exp = 5;
 
+	UPROPERTY(EditAnywhere)
 	// Maximum movement speed
-	float ms;
+	float ms = 10;
 
 	// Last attacked by
 	AActor* lab;
 
+	UPROPERTY(EditAnywhere)
 	// Damage dealt by the enemy
-	float MinDmg, MaxDmg;
+	float MinDmg = 0.125, MaxDmg = 0.25;
 
+	UPROPERTY(EditAnywhere)
 	// Damage knockback
 	float DmgKnockback;
 

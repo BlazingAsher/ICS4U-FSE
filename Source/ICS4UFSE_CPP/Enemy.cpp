@@ -16,16 +16,6 @@ AEnemy::AEnemy()
 	// By default, the armour is zero
 	armour = Armour();
 
-	// Default damage values
-	MinDmg = 0.125;
-	MaxDmg = 0.25;
-	DmgKnockback = 10;
-
-	// this is temporary, and should be in subclasses
-	mxhp = 10;
-	hp = mxhp;
-	exp = 10;
-
 }
 
 // Called when the game starts or when spawned

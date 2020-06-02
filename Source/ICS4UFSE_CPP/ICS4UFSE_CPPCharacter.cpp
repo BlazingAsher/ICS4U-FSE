@@ -286,9 +286,9 @@ int AICS4UFSE_CPPCharacter::GetLvl()
 	using namespace std;
 	double x = exp;
 	if (x == 0)
-		return 0;
+		return ComputedLvl = 0;
 	else
-		return(int)floor(cbrt(x / 2 + sqrt(27 * x * x - 4) / 6 / sqrt(3)) + cbrt(x / 2 - sqrt(27 * x * x - 4) / 6 / sqrt(3)) - 1);
+		return ComputedLvl = (int)floor(cbrt(x / 2 + sqrt(27 * x * x - 4) / 6 / sqrt(3)) + cbrt(x / 2 - sqrt(27 * x * x - 4) / 6 / sqrt(3)) - 1);
 }
 
 int AICS4UFSE_CPPCharacter::GetExpToNextLvl()
@@ -313,4 +313,9 @@ void AICS4UFSE_CPPCharacter::AddExp(int x)
 float AICS4UFSE_CPPCharacter::GetExpPercent()
 {
 	return ExpPercent;
+}
+
+int AICS4UFSE_CPPCharacter::GetComputedLvl()
+{
+	return ComputedLvl;
 }
