@@ -264,16 +264,16 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src
 
 void AICS4UFSE_CPPCharacter::AddEnergy(float Energy) {
 	playerEnergy = playerEnergy + Energy <= 1.0f ? playerEnergy + Energy : 1.0f;
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Added energy!");
-	}
+//	if (GEngine) {
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Added energy!");
+//	}
 }
 
 void AICS4UFSE_CPPCharacter::RemoveEnergy(float Energy) {
 	playerEnergy = playerEnergy - Energy >= 0.0f ? playerEnergy - Energy : 0.0f;
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Removed energy!");
-	}
+//	if (GEngine) {
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Removed energy!");
+//	}
 }
 
 int AICS4UFSE_CPPCharacter::GetExp()
@@ -318,4 +318,18 @@ float AICS4UFSE_CPPCharacter::GetExpPercent()
 int AICS4UFSE_CPPCharacter::GetComputedLvl()
 {
 	return ComputedLvl;
+}
+
+void AICS4UFSE_CPPCharacter::AddPortalProgress()
+{
+	PortalProgress += 1;
+	if (PortalProgress == PORTAL_NUM_PIECES) {
+		if (GEngine) {
+			GEngine->AddOnScreenDebugMessage(-2, 5.0f, FColor::Blue, "Portal spawning!");
+		}
+	}
+}
+
+bool AICS4UFSE_CPPCharacter::HasPortal() {
+	return PortalProgress == PORTAL_NUM_PIECES;
 }

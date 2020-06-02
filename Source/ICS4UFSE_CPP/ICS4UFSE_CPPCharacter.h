@@ -53,6 +53,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int ComputedLvl;
 
+	UPROPERTY(BlueprintReadOnly)
+		int PortalProgress;
+
+	// Number of portal pieces required
+	const int PORTAL_NUM_PIECES = 4;
+
 protected:
 
 	/** Resets HMD orientation in VR. */
@@ -152,5 +158,11 @@ public:
 
 	UFUNCTION()
 	int GetComputedLvl();
+
+	UFUNCTION()
+	void AddPortalProgress();
+
+	UFUNCTION()
+	bool HasPortal();
 
 };
