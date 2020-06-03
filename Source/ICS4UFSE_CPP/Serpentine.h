@@ -24,4 +24,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Warns other enemies of player
+	virtual void Warn();
+
+	// Be warned of player presence
+	virtual void BeWarned(const FVector& PlayerPos);
+
+protected:
+	// Warning variables for player prescence
+	bool WarnInited;
+	unsigned int WarnTimer;
+
 };

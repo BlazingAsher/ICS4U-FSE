@@ -56,10 +56,20 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	// Damage dealt by the enemy
-	float MinDmg = 0.125, MaxDmg = 0.25;
+	float MinDmg = 0.125;
+	
+	UPROPERTY(EditAnywhere)
+	// Maximum damage
+	float MaxDmg = 0.25;
 
 	UPROPERTY(EditAnywhere)
 	// Damage knockback
 	float DmgKnockback;
+
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* MyMesh;
+
+	UPROPERTY()
+	class UBoxComponent* MyBoxComponent;
 
 };

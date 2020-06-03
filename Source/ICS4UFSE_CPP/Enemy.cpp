@@ -2,6 +2,7 @@
 
 
 #include "Enemy.h"
+#include "Components/BoxComponent.h"
 #include <algorithm>
 #include <cstdlib>
 #include <ICS4UFSE_CPP\ICS4UFSE_CPPCharacter.h>
@@ -15,6 +16,14 @@ AEnemy::AEnemy()
 
 	// By default, the armour is zero
 	armour = Armour();
+
+	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
+	RootComponent = MyMesh;
+
+	MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
+	MyBoxComponent->InitBoxExtent(FVector(50, 50, 50));
+	MyBoxComponent->SetCollisionProfileName("Trigger");
+	MyBoxComponent->SetupAttachment(RootComponent);
 
 }
 
