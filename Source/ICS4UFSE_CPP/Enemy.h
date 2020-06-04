@@ -32,6 +32,9 @@ public:
 	// Destroys the enemy
 	virtual void Destroy(bool x = false, bool y = true);
 
+	// Attacks the player
+	virtual void Attack(AActor* actor);
+
 	// Get the last actor that attacked this enemy
 	AActor* GetLastAttackedBy();
 
@@ -46,6 +49,13 @@ protected:
 	UPROPERTY(EditAnywhere)
 	// Experience reward
 	int exp = 5;
+
+	UPROPERTY(EditAnywhere)
+	// Maximum attack cooldown
+	int MaxAtkCldn = 60;
+
+	// Attack cooldown
+	int AtkCldn;
 
 	UPROPERTY(EditAnywhere)
 	// Maximum movement speed

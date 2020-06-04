@@ -4,6 +4,7 @@
 #include "Serpentine.h"
 #include "Kismet/GameplayStatics.h"
 #include "Templates/SubclassOf.h"
+#include "ICS4UFSE_CPPCharacter.h"
 #include <Runtime\Engine\Classes\Engine\Engine.h>
 
 // Sets default values
@@ -33,16 +34,23 @@ void ASerpentine::Tick(float DeltaTime)
 	FVector Facing = GetActorRotation().Vector();
 	float Theta = std::acos((Facing | PosDiff) / magnitude) * 180 / 3.1415926535897932;
 
-	if (GEngine) {
-		FString fs;
-		fs.AppendInt(Theta);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, fs);
-	}
+	// decrease attack cooldown
+	if (AtkCldn > 0)
+		--AtkCldn;
 
 	// The enemy will detect player if it is within field of view.
 	// Make sure to implement pigman like warning
 	if (Theta < 60)
+	{
 		SetActorRotation(PosDiff.ToOrientationRotator());
+		Warn();
+
+		if (magnitude < 300)
+		{
+			Attack(GetWorld()->GetFirstPlayerController()->GetPawn());
+		}
+
+	}
 	else
 	{
 		// a random number deciding to randomly turn
@@ -65,9 +73,12 @@ void ASerpentine::Tick(float DeltaTime)
 
 		for (auto begin = actors.begin(); begin != actors.end(); ++begin)
 		{
-			// cast the reference
-			ASerpentine& sk = dynamic_cast<ASerpentine&>(**begin);
-			sk.BeWarned(PlayerPos - sk.GetActorLocation());
+			if (*begin != this)
+			{
+				// cast the reference
+				ASerpentine& sk = dynamic_cast<ASerpentine&>(**begin);
+				sk.BeWarned(PlayerPos - sk.GetActorLocation());
+			}
 		}
 
 	}
@@ -85,11 +96,15 @@ void ASerpentine::Tick(float DeltaTime)
 // Warns other enemies of player
 void ASerpentine::Warn()
 {
-	WarnTimer = 300;
-	WarnInited = true;
+	if (!WarnInited)
+	{
+		WarnTimer = 300;
+		WarnInited = true;
+	}
 }
 
 void ASerpentine::BeWarned(const FVector& PlayerPos)
 {
 	SetActorRotation(PlayerPos.ToOrientationRotator());
+	SetActorLocation(GetActorLocation());
 }

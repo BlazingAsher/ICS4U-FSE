@@ -67,3 +67,16 @@ void AEnemy::ApplyDamage(float Dmg, DmgType Type, AActor* src)
 	else
 		hp = std::max(0.0f, hp - Dmg);
 }
+
+// Attacks the player
+void AEnemy::Attack(AActor* actor)
+{
+	// checks if the cooldown is zero
+	if (AtkCldn == 0)
+	{
+		// cast the reference, apply the damage, and reset the cooldown
+		AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*actor);
+		player.ApplyDamage(MaxDmg, DmgType::DmgMelee, this);
+		AtkCldn = MaxAtkCldn;
+	}
+}
