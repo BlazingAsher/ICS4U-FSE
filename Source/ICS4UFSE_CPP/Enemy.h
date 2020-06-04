@@ -38,10 +38,13 @@ public:
 	// Get the last actor that attacked this enemy
 	AActor* GetLastAttackedBy();
 
+	// Walk the enemy
+	virtual void Walk(bool running = false);
+
 protected:
 	UPROPERTY(EditAnywhere)
 	// Health of the enemy
-	float hp = 10, mxhp = 10;
+	float mxhp = 10, hp = 10;
 
 	// Armour of the enemy
 	FArmour armour;
@@ -59,7 +62,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	// Maximum movement speed
-	float ms = 10;
+	float ms = 2;
 
 	// Last attacked by
 	AActor* lab;

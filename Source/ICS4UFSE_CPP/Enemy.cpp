@@ -80,3 +80,10 @@ void AEnemy::Attack(AActor* actor)
 		AtkCldn = MaxAtkCldn;
 	}
 }
+
+void AEnemy::Walk(bool running)
+{
+	FVector Facing = GetActorRotation().Vector();
+	Facing *= running ? ms : ms / 3;
+	SetActorLocationAndRotation(GetActorLocation() + Facing, GetActorRotation());
+}

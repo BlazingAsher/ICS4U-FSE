@@ -50,6 +50,9 @@ void ASerpentine::Tick(float DeltaTime)
 		{
 			Attack(GetWorld()->GetFirstPlayerController()->GetPawn());
 		}
+		else
+			Walk(true);
+		ThisPos = GetActorLocation();
 
 	}
 	else
@@ -78,7 +81,8 @@ void ASerpentine::Tick(float DeltaTime)
 			{
 				// cast the reference
 				ASerpentine& sk = dynamic_cast<ASerpentine&>(**begin);
-				sk.BeWarned(PlayerPos - sk.GetActorLocation());
+				if ((PlayerPos - sk.GetActorLocation()).Size() < 25000)
+					sk.BeWarned(PlayerPos - sk.GetActorLocation());
 			}
 		}
 
