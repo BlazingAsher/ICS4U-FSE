@@ -33,10 +33,16 @@ public:
 	float BaseLookUpRate;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		float MaxHealth;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float playerHealth;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		float playerArmour;
+		float ArmourHardness;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		float ArmourToughness;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		int attackState;
@@ -55,6 +61,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 		int PortalProgress;
+
+	FArmour PlayerArmour;
 
 	// Number of portal pieces required
 	const int PORTAL_NUM_PIECES = 4;
@@ -117,8 +125,6 @@ protected:
 protected:
 	FTimerHandle EnergyRegenTimerHandle;
 	FTimerDelegate EnergyRegenTimerDelegate;
-
-	Armour PlayerArmour;
 
 public:
 	/** Returns CameraBoom subobject **/

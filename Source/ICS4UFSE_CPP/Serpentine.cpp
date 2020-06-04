@@ -2,6 +2,7 @@
 
 
 #include "Serpentine.h"
+#include <chrono>
 #include "Kismet/GameplayStatics.h"
 #include "Templates/SubclassOf.h"
 #include "ICS4UFSE_CPPCharacter.h"
@@ -54,11 +55,11 @@ void ASerpentine::Tick(float DeltaTime)
 	else
 	{
 		// a random number deciding to randomly turn
-		unsigned int RndNum = std::rand() % 3600;
+		unsigned int RndNum = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch().count() % 3600;
 
 		if (RndNum == 0)
 		{
-			float pitch = RndNum / 10, yaw = std::rand() % 360;
+			float pitch = RndNum / 10, yaw = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch().count() % 360;
 			SetActorRotation({ pitch, yaw, 0.0f });
 		}
 	}

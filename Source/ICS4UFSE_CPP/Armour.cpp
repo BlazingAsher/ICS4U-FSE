@@ -5,33 +5,39 @@
 #include <algorithm>
 #include <cmath>
 
-Armour::Armour()
+FArmour::FArmour()
 {
     Tough = 0;
     Hard = 0;
 }
 
-float Armour::Hardness()
+FArmour::FArmour(float T, float H)
+{
+    Tough = T;
+    Hard = H;
+}
+
+float FArmour::Hardness()
 {
     return Hard;
 }
 
-void Armour::Hardness(float hard)
+void FArmour::Hardness(float hard)
 {
     Hard = hard;
 }
 
-float Armour::Toughness()
+float FArmour::Toughness()
 {
     return Tough;
 }
 
-void Armour::Toughness(float tough)
+void FArmour::Toughness(float tough)
 {
     Tough = tough;
 }
 
-float Armour::CalcDmg(float Orig)
+float FArmour::CalcDmg(float Orig)
 {
     using namespace std;
 
@@ -44,7 +50,7 @@ float Armour::CalcDmg(float Orig)
     return min(Orig * Orig * Orig * 8 / 972099 / (exp(3 * Hard) + exp(2 * Hard) * 3 + exp(Hard) * 3 + 1), Orig * 2 / (1 + exp(Hard)));
 }
 
-float Armour::operator -(float Orig)
+float FArmour::operator -(float Orig)
 {
     float DmgDealt = CalcDmg(Orig);
     Tough = std::max(0.0f, Tough - Orig);
@@ -52,6 +58,6 @@ float Armour::operator -(float Orig)
     return DmgDealt;
 }
 
-Armour::~Armour()
+FArmour::~FArmour()
 {
 }

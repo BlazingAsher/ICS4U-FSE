@@ -44,7 +44,7 @@ protected:
 	float hp = 10, mxhp = 10;
 
 	// Armour of the enemy
-	Armour armour;
+	FArmour armour;
 
 	UPROPERTY(EditAnywhere)
 	// Experience reward

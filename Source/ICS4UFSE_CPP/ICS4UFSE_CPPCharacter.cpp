@@ -61,8 +61,13 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Set health and armour defaults
 	exp = 0;
 
-	playerHealth = 1.0f;
-	playerArmour = 1.0f;
+	MaxHealth = 15.0f;
+	playerHealth = MaxHealth;
+
+	PlayerArmour = { 1.0f,1.0f };
+
+	ArmourHardness = PlayerArmour.Hardness();
+	ArmourToughness = PlayerArmour.Toughness();
 
 	attackState = 0;
 
@@ -246,6 +251,7 @@ void AICS4UFSE_CPPCharacter::MoveRight(float Value)
 
 void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src)
 {
+
 	if (Type < DmgType::DmgFall)
 	{
 		// apply armour damage
@@ -255,11 +261,10 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src
 	}
 	else
 		playerHealth = std::max(0.0f, playerHealth - Damage);
-	/*playerArmour -= Damage;
-	if (playerArmour < 0) {
-		playerHealth += playerArmour;
-		playerArmour = 0;
-	}*/
+	
+	ArmourHardness = PlayerArmour.Hardness();
+	ArmourToughness = PlayerArmour.Toughness();
+
 }
 
 void AICS4UFSE_CPPCharacter::AddEnergy(float Energy) {
