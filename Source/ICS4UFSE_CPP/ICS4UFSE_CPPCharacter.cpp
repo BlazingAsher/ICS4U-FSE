@@ -16,6 +16,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/Engine.h"
+#include "UObject/UObjectIterator.h"
+#include <ICS4UFSE_CPP\Portal.h>
 
 //////////////////////////////////////////////////////////////////////////
 // AICS4UFSE_CPPCharacter
@@ -331,6 +333,14 @@ void AICS4UFSE_CPPCharacter::AddPortalProgress()
 	if (PortalProgress == PORTAL_NUM_PIECES) {
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-2, 5.0f, FColor::Blue, "Portal spawning!");
+		}
+
+		for (TObjectIterator<APortal> Itr; Itr; ++Itr)
+		{
+			if (Itr->IsA(APortal::StaticClass()))
+			{
+				Itr->ActivatePortal();
+			}
 		}
 	}
 }
