@@ -63,7 +63,7 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Set health and armour defaults
 	exp = 0;
 
-	MaxHealth = 15.0f;
+	MaxHealth = 3.0f;
 	playerHealth = MaxHealth;
 
 	PlayerArmour = { 1.0f,1.0f };
@@ -347,4 +347,11 @@ void AICS4UFSE_CPPCharacter::AddPortalProgress()
 
 bool AICS4UFSE_CPPCharacter::HasPortal() {
 	return PortalProgress == PORTAL_NUM_PIECES;
+}
+
+void AICS4UFSE_CPPCharacter::Heal(float hp)
+{
+	playerHealth += hp;
+	if (playerHealth > MaxHealth)
+		playerHealth = MaxHealth;
 }

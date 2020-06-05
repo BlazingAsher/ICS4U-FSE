@@ -171,4 +171,7 @@ public:
 	UFUNCTION()
 	bool HasPortal();
 
+	UFUNCTION()
+	void Heal(float hp);
+
 };
