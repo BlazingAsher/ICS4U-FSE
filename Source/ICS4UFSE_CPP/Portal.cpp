@@ -2,7 +2,6 @@
 
 
 #include "Portal.h"
-#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include <ICS4UFSE_CPP\ICS4UFSE_CPPCharacter.h>
 #include "Engine/Engine.h"

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ICS4UFSE_CPPCharacter.h"
 #include "Components/SphereComponent.h"
 #include "PainVolume.generated.h"
 
@@ -16,6 +15,7 @@ class ICS4UFSE_CPP_API APainVolume : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APainVolume();
+	void Attack(class AActor* Target);
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,11 +28,28 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	bool inVolume;
 
+	AActor* SpawnedBy;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere)
+		class UStaticMeshComponent* MyMesh;
+
+	UPROPERTY()
+		class USphereComponent* MySphereComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WorldBehaviour")
+		float Lifespan = 15.f;
+
 	UFUNCTION()
 		virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	void DefaultDestroy();
+
+	void DamageTick();
+
+	virtual void Destroy(bool bNetForce = false, bool bShouldModifyLevel = true);
+	
 };

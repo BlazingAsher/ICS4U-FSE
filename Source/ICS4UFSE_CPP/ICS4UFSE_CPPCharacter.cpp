@@ -121,6 +121,10 @@ void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnUse);
 	PlayerInputComponent->BindAction("Use", IE_Released, this, &AICS4UFSE_CPPCharacter::EndUse);
 
+	// Special Attack
+	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnSpecialAttack);
+	PlayerInputComponent->BindAction("SpecialAttack", IE_Released, this, &AICS4UFSE_CPPCharacter::EndSpecialAttack);
+
 	// Crouching
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AICS4UFSE_CPPCharacter::EndCrouch);
@@ -146,6 +150,24 @@ void AICS4UFSE_CPPCharacter::OnAttack()
 	attackState = 1;
 }
 
+void AICS4UFSE_CPPCharacter::OnSpecialAttack()
+{
+	if (playerEnergy > 0.7f && PainVolumeBP) {
+		attackState = 5;
+		// Spawn the painvolume at its radius away so that character is in the center
+		FVector volumeSpawnLocation = GetActorLocation() + GetActorForwardVector() * 250;
+		FActorSpawnParameters SpawnParams;
+		GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
+		RemoveEnergy(0.7f);
+	}
+	
+}
+
+void AICS4UFSE_CPPCharacter::EndSpecialAttack()
+{
+	attackState = 0;
+}
+
 void AICS4UFSE_CPPCharacter::EndAttack()
 {
 
@@ -167,7 +189,8 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		if (PosDiff.Size() < 300 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 3.1415926535897932 / 3)
 		{
 			// deal damage to the enemy
-			aep->ApplyDamage(GetLvl() + 1, DmgType::DmgMelee, this);
+			//aep->ApplyDamage(GetLvl() + 1, DmgType::DmgMelee, this);
+			aep->ApplyDamage((GetLvl()+1) * 5, DmgType::DmgMelee, this);
 			// knock the enemy back a bit
 			aep->SetActorRotation(aep->GetActorRotation());
 			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 2.0f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 10) + ThisPos);

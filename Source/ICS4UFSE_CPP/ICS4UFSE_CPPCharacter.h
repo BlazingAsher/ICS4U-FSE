@@ -7,6 +7,7 @@
 #include "TimerManager.h"
 #include "Armour.h"
 #include "DmgType.h"
+#include <ICS4UFSE_CPP\PainVolume.h>
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -62,6 +63,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int PortalProgress;
 
+	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
+		TSubclassOf<APainVolume> PainVolumeBP;
+
 	FArmour PlayerArmour;
 
 	// Number of portal pieces required
@@ -103,6 +107,12 @@ protected:
 
 	/* End left click handler */
 	void EndAttack();
+
+	/* Special attack handler*/
+	void OnSpecialAttack();
+
+	/* Ed special attack handler */
+	void EndSpecialAttack();
 
 	/* Right click handler */
 	void OnUse();
