@@ -63,10 +63,8 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Set health and armour defaults
 	exp = 0;
 
-	MaxHealth = 3.0f;
+	MaxHealth = 150.0f;
 	playerHealth = MaxHealth;
-
-	PlayerArmour = { 1.0f,1.0f };
 
 	ArmourHardness = PlayerArmour.Hardness();
 	ArmourToughness = PlayerArmour.Toughness();

@@ -44,7 +44,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	// Health of the enemy
-	float mxhp = 10, hp = 10;
+	float mxhp = 150, hp = 150;
 
 	// Armour of the enemy
 	FArmour armour;
@@ -69,11 +69,11 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	// Damage dealt by the enemy
-	float MinDmg = 0.125;
+	float MinDmg = 5;
 	
 	UPROPERTY(EditAnywhere)
 	// Maximum damage
-	float MaxDmg = 0.25;
+	float MaxDmg = 25;
 
 	UPROPERTY(EditAnywhere)
 	// Damage knockback

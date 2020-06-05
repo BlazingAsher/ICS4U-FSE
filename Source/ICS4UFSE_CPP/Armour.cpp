@@ -47,7 +47,7 @@ float FArmour::CalcDmg(float Orig)
         return Orig + CalcDmg(Tough);
     }
 
-    return min(Orig * Orig * Orig * 8 / 972099 / (exp(3 * Hard) + exp(2 * Hard) * 3 + exp(Hard) * 3 + 1), Orig * 2 / (1 + exp(Hard)));
+    return min(Orig * Orig * Orig * 8 / (exp(3 * Hard) + exp(2 * Hard) * 3 + exp(Hard) * 3 + 1), Orig * 2 / (1 + exp(Hard)));
 }
 
 float FArmour::operator -(float Orig)
