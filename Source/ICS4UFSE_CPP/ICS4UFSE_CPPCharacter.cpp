@@ -158,28 +158,33 @@ void AICS4UFSE_CPPCharacter::Tick(float DeltaTime)
 	}
 }
 
-void AICS4UFSE_CPPCharacter::OnAttack()
-{
-	attackState = 1;
-}
-
 void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 {
-	int specialID = SelectedSpecial;
-	float requiredEnergy = (specialID + 1) / 4.f;
+	int specialID = SelectedSpecial; // cast the enum to an int
+
+	float requiredEnergy = (specialID + 1) / 4.f; // calculate required player energy
+	
+	// debugging
 	if (GEngine) {
 		GEngine->AddOnScreenDebugMessage(-18, 5.0f, FColor::Red, FString::FromInt(specialID));
 		GEngine->AddOnScreenDebugMessage(-37, 5.0f, FColor::Red, FString::FromInt(requiredEnergy*100));
 	}
+
+	// Proceed if player has selected an attack, has the required energy, and we have an instance of a Pain VL to spawn
 	if (SelectedSpecial != SpecialAttack::None && playerEnergy >= requiredEnergy && PainVolumeBP) {
-		attackState = 5;
+		attackState = 5; // set the attack state for the animation
+
+		// Spawn the actor so that the player is in the middle of it (radius of actor is 500)
 		FVector volumeSpawnLocation = GetActorLocation() + GetActorForwardVector() * 250;
 		FActorSpawnParameters SpawnParams;
-		APainVolume* PainVLInstance = GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
-		//GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, GetTransform(), SpawnParams);
 
+		// Spawn the Pain VL and keep a reference to it
+		APainVolume* PainVLInstance = GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
+
+		// Stores the class of the spawner
 		TSubclassOf<AParticleSpawner> SpawnerClass;
 
+		// Determine the spawner class based on the selected special attack
 		if (SelectedSpecial == SpecialAttack::Spin) {
 			SpawnerClass = SpinParticleSpawner;
 		}
@@ -190,8 +195,10 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 			SpawnerClass = ElementalParticleSpawner;
 		}
 
+		// Set the damage of the Pain VL (15 is base damage)
 		PainVLInstance->SetDamage(specialID * 15);
 
+		// Spawn the particle effects
 		if (SpawnerClass) {
 			AParticleSpawner* ParticleSpawnerInstance = GetWorld()->SpawnActor<AParticleSpawner>(SpawnerClass, volumeSpawnLocation, FRotator(), SpawnParams);
 			ParticleSpawnerInstance->SetFollow(this);
@@ -200,33 +207,27 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 			}
 		}
 
+		// Deduct energy from player
 		RemoveEnergy(requiredEnergy);
 	}
-
-	//if (playerEnergy > 0.7f && PainVolumeBP) {
-	//	attackState = 5;
-	//	// Spawn the painvolume at its radius away so that character is in the center
-	//	FVector volumeSpawnLocation = GetActorLocation() + GetActorForwardVector() * 250;
-	//	FActorSpawnParameters SpawnParams;
-	//	GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
-	//	RemoveEnergy(0.7f);
-	//}
-	//else if (!PainVolumeBP) {
-	//	if (GEngine) {
-	//		GEngine->AddOnScreenDebugMessage(-9, 5.0f, FColor::Red, "No pain volume!");
-	//	}
-	//}
 	
 }
 
 void AICS4UFSE_CPPCharacter::EndSpecialAttack()
 {
+	// Stop the animation
 	attackState = 0;
+}
+
+void AICS4UFSE_CPPCharacter::OnAttack()
+{
+	// Start the punching animation
+	attackState = 1;
 }
 
 void AICS4UFSE_CPPCharacter::EndAttack()
 {
-
+	// Stop the animation
 	attackState = 0;
 
 	TArray<AActor*>actors;
@@ -348,16 +349,10 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src
 
 void AICS4UFSE_CPPCharacter::AddEnergy(float Energy) {
 	playerEnergy = playerEnergy + Energy <= 1.0f ? playerEnergy + Energy : 1.0f;
-//	if (GEngine) {
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Added energy!");
-//	}
 }
 
 void AICS4UFSE_CPPCharacter::RemoveEnergy(float Energy) {
 	playerEnergy = playerEnergy - Energy >= 0.0f ? playerEnergy - Energy : 0.0f;
-//	if (GEngine) {
-//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, "Removed energy!");
-//	}
 }
 
 int AICS4UFSE_CPPCharacter::GetExp()

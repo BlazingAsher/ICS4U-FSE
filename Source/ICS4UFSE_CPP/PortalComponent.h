@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Item that player picks up to slowly build the portal to the boss
 
 #pragma once
 
@@ -23,14 +24,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Mesh and box component
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* MyMesh;
 
 	UPROPERTY()
 	class UBoxComponent* MyBoxComponent;
 
+	// Called whenever an actor overlaps with the Portal Component
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	virtual void Destroy(bool bNetForce = false, bool bShouldModifyLevel = true);
 };

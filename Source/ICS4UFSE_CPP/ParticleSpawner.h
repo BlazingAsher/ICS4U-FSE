@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Wraps a Particle system to allow it to be spawned in C++
 
 #pragma once
 
@@ -20,29 +21,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	AActor* SpawnedActor;
-
+	// Actor that this particle system follows
 	AActor* FollowActor;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "SpawningOptions")
-	//	TSubclassOf<AParticleWrapper> ParticleWrapperBP;
-
+	// Lifespan of the particle system
 	UPROPERTY(EditDefaultsOnly, Category = "SpawningOptions")
 		float ttl = 0;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "SpawningOptions")
-	//	float SpawnDelay = 0;
-
-	//UFUNCTION()
-	//	void SpawnParticle();
-
+	// Destroys the system
 	UFUNCTION()
 		void DestroyParticle();
 
+	// Set an actor for this system to follow
 	UFUNCTION()
 		void SetFollow(AActor* otherActor);
 };

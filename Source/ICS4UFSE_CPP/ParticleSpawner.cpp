@@ -15,8 +15,8 @@ AParticleSpawner::AParticleSpawner()
 void AParticleSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	//FTimerHandle spawnHandle;
-	//GetWorldTimerManager().SetTimer(spawnHandle, this, &AParticleSpawner::SpawnParticle, SpawnDelay);
+	
+	// If this system is not perpetual, register a destruction timer
 	if (ttl > 0.1) {
 		FTimerHandle destroyHandle;
 		GetWorldTimerManager().SetTimer(destroyHandle, this, &AParticleSpawner::DestroyParticle, ttl);
@@ -28,23 +28,21 @@ void AParticleSpawner::BeginPlay()
 void AParticleSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Set particle location to location of actor that it is following
 	if (FollowActor) {
 		SetActorLocation(FollowActor->GetActorLocation());
 	}
 
 }
 
-//void AParticleSpawner::SpawnParticle()
-//{
-//	FActorSpawnParameters SpawnParams;
-//	SpawnedActor = GetWorld()->SpawnActor<AParticleWrapper>(ParticleWrapperBP, GetTransform(), SpawnParams);
-//}
-
+// Destroys the particle system
 void AParticleSpawner::DestroyParticle()
 {
 	Destroy();
 }
 
+// Set the actor that this particle system should follow
 void AParticleSpawner::SetFollow(AActor* otherActor) {
 	FollowActor = otherActor;
 }

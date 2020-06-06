@@ -11,6 +11,7 @@ APortalComponent::APortalComponent()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Set up mesh and box component
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
 
@@ -25,6 +26,8 @@ APortalComponent::APortalComponent()
 void APortalComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Register overlap listener
 	MyBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &APortalComponent::OnOverlapBegin);
 	
 }
@@ -42,15 +45,11 @@ void APortalComponent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 	// Null pointer and self check, also make sure that the actor is the player and not an NPC
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && GetWorld()->GetFirstPlayerController()->GetPawn() == OtherActor)
 	{
+		// Cast to a player and add portal progress
 		if (dynamic_cast<AICS4UFSE_CPPCharacter*>(OtherActor))
 			((AICS4UFSE_CPPCharacter*)OtherActor)->AddPortalProgress();
 
+		// Self destruct
 		Destroy();
 	}
-}
-
-// Destroys the enemy
-void APortalComponent::Destroy(bool x, bool y)
-{
-	Super::Destroy(x, y);
 }

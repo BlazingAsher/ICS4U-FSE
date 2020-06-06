@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Actor that is spawned in by Venomai actor. Acts like a ghost. Cannot attack or be attacked.
 
 #pragma once
 

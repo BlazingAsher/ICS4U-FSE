@@ -68,8 +68,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int PortalProgress;
 
-	UPROPERTY(BlueprintReadOnly)
-		int SpecialAttackProgress = 3;
+	UPROPERTY(EditInstanceOnly)
+		int SpecialAttackProgress = 0;
 
 	UPROPERTY(BlueprintReadOnly)
 		TEnumAsByte<SpecialAttack> SelectedSpecial = SpecialAttack::None;

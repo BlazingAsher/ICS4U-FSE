@@ -79,6 +79,7 @@ protected:
 	// Damage knockback
 	float DmgKnockback;
 
+	// Mesh and Collision Box Components
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* MyMesh;
 
