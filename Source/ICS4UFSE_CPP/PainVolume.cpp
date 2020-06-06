@@ -42,7 +42,8 @@ void APainVolume::BeginPlay()
 void APainVolume::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	SetActorLocation(SpawnedBy->GetActorLocation());
 }
 
 void APainVolume::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

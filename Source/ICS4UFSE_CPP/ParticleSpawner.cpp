@@ -15,9 +15,9 @@ AParticleSpawner::AParticleSpawner()
 void AParticleSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	FTimerHandle spawnHandle;
-	GetWorldTimerManager().SetTimer(spawnHandle, this, &AParticleSpawner::SpawnParticle, SpawnDelay);
-	if (ttl < 0.1) {
+	//FTimerHandle spawnHandle;
+	//GetWorldTimerManager().SetTimer(spawnHandle, this, &AParticleSpawner::SpawnParticle, SpawnDelay);
+	if (ttl > 0.1) {
 		FTimerHandle destroyHandle;
 		GetWorldTimerManager().SetTimer(destroyHandle, this, &AParticleSpawner::DestroyParticle, ttl);
 	}
@@ -28,16 +28,23 @@ void AParticleSpawner::BeginPlay()
 void AParticleSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (FollowActor) {
+		SetActorLocation(FollowActor->GetActorLocation());
+	}
 
 }
 
-void AParticleSpawner::SpawnParticle()
-{
-	FActorSpawnParameters SpawnParams;
-	SpawnedActor = GetWorld()->SpawnActor<AParticleWrapper>(ParticleWrapperBP, GetTransform(), SpawnParams);
-}
+//void AParticleSpawner::SpawnParticle()
+//{
+//	FActorSpawnParameters SpawnParams;
+//	SpawnedActor = GetWorld()->SpawnActor<AParticleWrapper>(ParticleWrapperBP, GetTransform(), SpawnParams);
+//}
 
 void AParticleSpawner::DestroyParticle()
 {
-	SpawnedActor->Destroy();
+	Destroy();
+}
+
+void AParticleSpawner::SetFollow(AActor* otherActor) {
+	FollowActor = otherActor;
 }

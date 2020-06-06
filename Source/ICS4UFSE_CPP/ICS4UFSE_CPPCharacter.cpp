@@ -125,6 +125,9 @@ void AICS4UFSE_CPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnSpecialAttack);
 	PlayerInputComponent->BindAction("SpecialAttack", IE_Released, this, &AICS4UFSE_CPPCharacter::EndSpecialAttack);
 
+	// Cycle special attacks
+	PlayerInputComponent->BindAction("ChangeSpecial", IE_Pressed, this, &AICS4UFSE_CPPCharacter::CycleSpell);
+
 	// Crouching
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AICS4UFSE_CPPCharacter::OnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AICS4UFSE_CPPCharacter::EndCrouch);
@@ -162,19 +165,54 @@ void AICS4UFSE_CPPCharacter::OnAttack()
 
 void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 {
-	if (playerEnergy > 0.7f && PainVolumeBP) {
+	int specialID = SelectedSpecial;
+	float requiredEnergy = (specialID + 1) / 4;
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-18, 5.0f, FColor::Red, FString::FromInt(specialID));
+	}
+	if (SelectedSpecial != SpecialAttack::None && playerEnergy >= requiredEnergy / 4 && PainVolumeBP) {
 		attackState = 5;
-		// Spawn the painvolume at its radius away so that character is in the center
 		FVector volumeSpawnLocation = GetActorLocation() + GetActorForwardVector() * 250;
 		FActorSpawnParameters SpawnParams;
 		GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
-		RemoveEnergy(0.7f);
-	}
-	else if (!PainVolumeBP) {
-		if (GEngine) {
-			GEngine->AddOnScreenDebugMessage(-9, 5.0f, FColor::Red, "No pain volume!");
+		//GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, GetTransform(), SpawnParams);
+
+		TSubclassOf<AParticleSpawner> SpawnerClass;
+
+		if (SelectedSpecial == SpecialAttack::Spin) {
+			SpawnerClass = SpinParticleSpawner;
 		}
+		else if (SelectedSpecial == SpecialAttack::Tornado) {
+			SpawnerClass = TornadoParticleSpawner;
+		}
+		else if (SelectedSpecial == SpecialAttack::Elemental) {
+			SpawnerClass = ElementalParticleSpawner;
+		}
+
+		if (SpawnerClass) {
+			AParticleSpawner* ParticleSpawnerInstance = GetWorld()->SpawnActor<AParticleSpawner>(SpawnerClass, volumeSpawnLocation, FRotator(), SpawnParams);
+			ParticleSpawnerInstance->SetFollow(this);
+			if (GEngine) {
+				GEngine->AddOnScreenDebugMessage(-12, 5.0f, FColor::Red, "spawned particle");
+			}
+		}
+
+		RemoveEnergy(requiredEnergy);
 	}
+
+	//if (playerEnergy > 0.7f && PainVolumeBP) {
+	//	attackState = 5;
+	//	// Spawn the painvolume at its radius away so that character is in the center
+	//	FVector volumeSpawnLocation = GetActorLocation() + GetActorForwardVector() * 250;
+	//	FActorSpawnParameters SpawnParams;
+	//	GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
+	//	RemoveEnergy(0.7f);
+	//}
+	//else if (!PainVolumeBP) {
+	//	if (GEngine) {
+	//		GEngine->AddOnScreenDebugMessage(-9, 5.0f, FColor::Red, "No pain volume!");
+	//	}
+	//}
 	
 }
 
@@ -397,4 +435,35 @@ void AICS4UFSE_CPPCharacter::LaunchPlayer(FVector LaunchDirection)
 	Launch = LaunchDirection / LaunchDirection.Size();
 	LaunchIncr = LaunchDirection.Size() / 3600;
 	LaunchIncrIncr = LaunchDirection.Size() / 1800;
+}
+
+void AICS4UFSE_CPPCharacter::AddSpell() {
+	SpecialAttackProgress++;
+}
+
+void AICS4UFSE_CPPCharacter::CycleSpell() {
+	if (SelectedSpecial == SpecialAttack::None && SpecialAttackProgress > 0) {
+		SelectedSpecial = SpecialAttack::Spin;
+	}
+	else if (SelectedSpecial == SpecialAttack::Spin && SpecialAttackProgress > 1) {
+		SelectedSpecial = SpecialAttack::Tornado;
+	}
+	else if (SelectedSpecial == SpecialAttack::Tornado && SpecialAttackProgress > 2) {
+		SelectedSpecial = SpecialAttack::Elemental;
+	}
+	else if (SelectedSpecial == SpecialAttack::Elemental) {
+		SelectedSpecial = SpecialAttack::Spin;
+	}
+	else {
+		SelectedSpecial = SpecialAttack::None;
+	}
+
+	if (GEngine) {
+		int attackID = SelectedSpecial;
+		GEngine->AddOnScreenDebugMessage(-14, 5.0f, FColor::Green, "Changed special attack to " + FString::FromInt(attackID));
+	}
+}
+
+void AICS4UFSE_CPPCharacter::SetSpell(SpecialAttack toBeSet) {
+	SelectedSpecial = toBeSet;
 }

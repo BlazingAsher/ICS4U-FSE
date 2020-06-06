@@ -8,6 +8,8 @@
 #include "Armour.h"
 #include "DmgType.h"
 #include <ICS4UFSE_CPP\PainVolume.h>
+#include <ICS4UFSE_CPP\ParticleSpawner.h>
+#include <ICS4UFSE_CPP\SpecialAttack.h>
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -24,6 +26,9 @@ class AICS4UFSE_CPPCharacter : public ACharacter
 	class UCameraComponent* FollowCamera;
 public:
 	AICS4UFSE_CPPCharacter();
+
+	// Number of portal pieces required
+	const static int PORTAL_NUM_PIECES = 4;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -63,8 +68,23 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		int PortalProgress;
 
+	UPROPERTY(BlueprintReadOnly)
+		int SpecialAttackProgress = 3;
+
+	UPROPERTY(BlueprintReadOnly)
+		TEnumAsByte<SpecialAttack> SelectedSpecial = SpecialAttack::None;
+
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<APainVolume> PainVolumeBP;
+
+	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
+		TSubclassOf<AParticleSpawner> SpinParticleSpawner;
+
+	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
+		TSubclassOf<AParticleSpawner> TornadoParticleSpawner;
+
+	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
+		TSubclassOf<AParticleSpawner> ElementalParticleSpawner;
 
 	FVector Launch;
 
@@ -72,8 +92,7 @@ public:
 
 	FArmour PlayerArmour;
 
-	// Number of portal pieces required
-	const static int PORTAL_NUM_PIECES = 4;
+	
 
 protected:
 
@@ -192,5 +211,14 @@ public:
 
 	UFUNCTION()
 	void LaunchPlayer(FVector LaunchDirection);
+
+	UFUNCTION()
+		void AddSpell();
+
+	UFUNCTION()
+		void CycleSpell();
+
+	UFUNCTION()
+		void SetSpell(SpecialAttack toBeSet);
 
 };
