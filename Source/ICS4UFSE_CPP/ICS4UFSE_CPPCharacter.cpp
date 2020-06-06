@@ -190,7 +190,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		{
 			// deal damage to the enemy
 			//aep->ApplyDamage(GetLvl() + 1, DmgType::DmgMelee, this);
-			aep->ApplyDamage((GetLvl()+1) * 5, DmgType::DmgMelee, this);
+			aep->ApplyDamage(GetLvl() * 15 + 30, DmgType::DmgMelee, this);
 			// knock the enemy back a bit
 			aep->SetActorRotation(aep->GetActorRotation());
 			aep->SetActorLocation(FVector{ 0.0f, 0.0f, 2.0f } + PosDiff / PosDiff.Size() * (PosDiff.Size() + 10) + ThisPos);

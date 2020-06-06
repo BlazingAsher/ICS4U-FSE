@@ -23,6 +23,8 @@ void ASerpentine::BeginPlay()
 	
 }
 
+extern template class TArray<AActor*>;
+
 // Called every frame
 void ASerpentine::Tick(float DeltaTime)
 {
@@ -40,8 +42,7 @@ void ASerpentine::Tick(float DeltaTime)
 		--AtkCldn;
 
 	// The enemy will detect player if it is within field of view.
-	// Make sure to implement pigman like warning
-	if (Theta < 60)
+	if (magnitude < 2000 && Theta < 60)
 	{
 		SetActorRotation(PosDiff.ToOrientationRotator());
 		Warn();
