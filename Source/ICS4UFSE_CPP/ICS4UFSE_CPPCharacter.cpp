@@ -145,6 +145,16 @@ void AICS4UFSE_CPPCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector
 	StopJumping();
 }
 
+void AICS4UFSE_CPPCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (LaunchIncr < 60 * LaunchIncrIncr)
+	{
+		SetActorLocation(GetActorLocation() + Launch * LaunchIncr);
+		LaunchIncr += LaunchIncrIncr;
+	}
+}
+
 void AICS4UFSE_CPPCharacter::OnAttack()
 {
 	attackState = 1;
@@ -351,7 +361,7 @@ int AICS4UFSE_CPPCharacter::GetComputedLvl()
 void AICS4UFSE_CPPCharacter::AddPortalProgress()
 {
 	PortalProgress += 1;
-	if (PortalProgress == PORTAL_NUM_PIECES) {
+	if (PortalProgress == AICS4UFSE_CPPCharacter::PORTAL_NUM_PIECES) {
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-2, 5.0f, FColor::Blue, "Portal spawning!");
 		}
@@ -367,7 +377,7 @@ void AICS4UFSE_CPPCharacter::AddPortalProgress()
 }
 
 bool AICS4UFSE_CPPCharacter::HasPortal() {
-	return PortalProgress == PORTAL_NUM_PIECES;
+	return PortalProgress == AICS4UFSE_CPPCharacter::PORTAL_NUM_PIECES;
 }
 
 void AICS4UFSE_CPPCharacter::Heal(float hp)
@@ -375,4 +385,11 @@ void AICS4UFSE_CPPCharacter::Heal(float hp)
 	playerHealth += hp;
 	if (playerHealth > MaxHealth)
 		playerHealth = MaxHealth;
+}
+
+void AICS4UFSE_CPPCharacter::LaunchPlayer(FVector LaunchDirection)
+{
+	Launch = LaunchDirection / LaunchDirection.Size();
+	LaunchIncr = LaunchDirection.Size() / 3600;
+	LaunchIncrIncr = LaunchDirection.Size() / 1800;
 }

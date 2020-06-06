@@ -39,6 +39,10 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// decrease attack cooldown
+	if (AtkCldn > 0)
+		--AtkCldn;
+
 	if (hp == 0)
 		Destroy();
 

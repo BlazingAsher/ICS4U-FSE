@@ -37,10 +37,6 @@ void ASerpentine::Tick(float DeltaTime)
 	FVector Facing = GetActorRotation().Vector();
 	float Theta = std::acos((Facing | PosDiff) / magnitude) * 180 / 3.1415926535897932;
 
-	// decrease attack cooldown
-	if (AtkCldn > 0)
-		--AtkCldn;
-
 	// The enemy will detect player if it is within field of view.
 	if (magnitude < 2000 && Theta < 60)
 	{

@@ -66,10 +66,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<APainVolume> PainVolumeBP;
 
+	FVector Launch;
+
+	float LaunchIncr, LaunchIncrIncr;
+
 	FArmour PlayerArmour;
 
 	// Number of portal pieces required
-	const int PORTAL_NUM_PIECES = 4;
+	const static int PORTAL_NUM_PIECES = 4;
 
 protected:
 
@@ -101,6 +105,8 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	void Tick(float DeltaTime)override;
 
 	/* Left click handler */
 	void OnAttack();
@@ -183,5 +189,8 @@ public:
 
 	UFUNCTION()
 	void Heal(float hp);
+
+	UFUNCTION()
+	void LaunchPlayer(FVector LaunchDirection);
 
 };
