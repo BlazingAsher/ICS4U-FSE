@@ -35,7 +35,7 @@ void APainVolume::BeginPlay()
 	FTimerHandle OutHandle;
 
 	GetWorld()->GetTimerManager().SetTimer(OutHandle, this, &APainVolume::DefaultDestroy, Lifespan);
-	GetWorld()->GetTimerManager().SetTimer(DamageHandle, this, &APainVolume::DamageTick, .5f, true, 0);
+	GetWorld()->GetTimerManager().SetTimer(DamageHandle, this, &APainVolume::DamageTick, DamageTickTime, true, 0);
 }
 
 // Called every frame
@@ -68,7 +68,7 @@ void APainVolume::DamageTick()
 void APainVolume::Attack(class AActor* Target)
 {
 	if (dynamic_cast<AEnemy*>(Target)) {
-		((AEnemy*)Target)->ApplyDamage(20, DmgType::DmgMelee, SpawnedBy);
+		((AEnemy*)Target)->ApplyDamage(DamageAmt, DmgType::DmgMelee, SpawnedBy);
 	}
 }
 
@@ -80,4 +80,8 @@ void APainVolume::Destroy(bool bNetForce, bool  bShouldModifyLevel)
 
 void APainVolume::DefaultDestroy() {
 	Destroy();
+}
+
+void APainVolume::SetDamage(float damage) {
+	DamageAmt = damage;
 }

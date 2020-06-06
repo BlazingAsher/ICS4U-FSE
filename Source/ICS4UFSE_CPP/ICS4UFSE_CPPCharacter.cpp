@@ -166,15 +166,16 @@ void AICS4UFSE_CPPCharacter::OnAttack()
 void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 {
 	int specialID = SelectedSpecial;
-	float requiredEnergy = (specialID + 1) / 4;
+	float requiredEnergy = (specialID + 1) / 4.f;
 	if (GEngine) {
 		GEngine->AddOnScreenDebugMessage(-18, 5.0f, FColor::Red, FString::FromInt(specialID));
+		GEngine->AddOnScreenDebugMessage(-37, 5.0f, FColor::Red, FString::FromInt(requiredEnergy*100));
 	}
-	if (SelectedSpecial != SpecialAttack::None && playerEnergy >= requiredEnergy / 4 && PainVolumeBP) {
+	if (SelectedSpecial != SpecialAttack::None && playerEnergy >= requiredEnergy && PainVolumeBP) {
 		attackState = 5;
 		FVector volumeSpawnLocation = GetActorLocation() + GetActorForwardVector() * 250;
 		FActorSpawnParameters SpawnParams;
-		GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
+		APainVolume* PainVLInstance = GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
 		//GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, GetTransform(), SpawnParams);
 
 		TSubclassOf<AParticleSpawner> SpawnerClass;
@@ -188,6 +189,8 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 		else if (SelectedSpecial == SpecialAttack::Elemental) {
 			SpawnerClass = ElementalParticleSpawner;
 		}
+
+		PainVLInstance->SetDamage(specialID * 15);
 
 		if (SpawnerClass) {
 			AParticleSpawner* ParticleSpawnerInstance = GetWorld()->SpawnActor<AParticleSpawner>(SpawnerClass, volumeSpawnLocation, FRotator(), SpawnParams);

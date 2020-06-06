@@ -43,12 +43,21 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "WorldBehaviour")
 		float Lifespan = 15.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "WorldBehaviour")
+		float DamageAmt = 20.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WorldBehaviour")
+		float DamageTickTime = .5f;
+
 	UFUNCTION()
 		virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void DefaultDestroy();
 
 	void DamageTick();
+
+	UFUNCTION()
+		void SetDamage(float damage);
 
 	virtual void Destroy(bool bNetForce = false, bool bShouldModifyLevel = true);
 	
