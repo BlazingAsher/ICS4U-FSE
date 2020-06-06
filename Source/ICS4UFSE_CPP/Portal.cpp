@@ -69,4 +69,6 @@ void APortal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AA
 
 void APortal::ActivatePortal() {
 	MyMesh->SetMaterial(0, OnMaterial);
+	FActorSpawnParameters SpawnParams;
+	AParticleSpawner* spawner = GetWorld()->SpawnActor<AParticleSpawner>(ParticleSpawner, GetTransform(), SpawnParams);
 }

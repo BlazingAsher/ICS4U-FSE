@@ -170,6 +170,11 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 		GetWorld()->SpawnActor<APainVolume>(PainVolumeBP, volumeSpawnLocation, FRotator(), SpawnParams);
 		RemoveEnergy(0.7f);
 	}
+	else if (!PainVolumeBP) {
+		if (GEngine) {
+			GEngine->AddOnScreenDebugMessage(-9, 5.0f, FColor::Red, "No pain volume!");
+		}
+	}
 	
 }
 
