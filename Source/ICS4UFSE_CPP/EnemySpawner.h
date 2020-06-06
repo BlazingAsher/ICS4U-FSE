@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
+#include "Engine/Engine.h"
 #include "EnemySpawner.generated.h"
 
 UCLASS()
@@ -20,6 +21,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	FTimerHandle spawnerHandle;
+
 public:	
 	UPROPERTY(VisibleAnywhere)
 		class UStaticMeshComponent* MyMesh;
@@ -34,7 +37,13 @@ public:
 		float SpawnTickRate = 1.f;
 
 	UPROPERTY(EditAnywhere, Category = "WorldBehaviour")
-		int SpawnRadius = 200;
+		int SpawnRadius = 1000;
+
+	UPROPERTY(EditAnywhere, Category = "WorldBehaviour")
+		int MaxSpawnNum = 1;
+
+	UPROPERTY(EditAnywhere, Category = "WorldBehaviour")
+		int MinSpawnNum = 1;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

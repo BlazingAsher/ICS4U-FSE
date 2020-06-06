@@ -7,7 +7,7 @@
 AEnemySpawner::AEnemySpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
@@ -23,9 +23,8 @@ AEnemySpawner::AEnemySpawner()
 void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
-	FTimerHandle spawnerHandle;
-	GetWorldTimerManager().SetTimer(spawnerHandle, this, &AEnemySpawner::Spawn, SpawnTickRate);
+	
+	GetWorldTimerManager().SetTimer(spawnerHandle, this, &AEnemySpawner::Spawn, SpawnTickRate, true);
 	
 }
 
@@ -39,11 +38,21 @@ void AEnemySpawner::Tick(float DeltaTime)
 void AEnemySpawner::Spawn()
 {
 	FActorSpawnParameters SpawnParameters;
-	FVector SpawnLocation = GetActorLocation();
 
-	SpawnLocation.X += (rand() % SpawnRadius * 2) - SpawnRadius;
-	SpawnLocation.Y += (rand() % SpawnRadius * 2) - SpawnRadius;
+	int spawnAmount = MinSpawnNum + rand() % (MaxSpawnNum - MinSpawnNum);
 
-	FRotator SpawnRotation;
-	GetWorld()->SpawnActor<AActor>(ToSpawn, SpawnLocation, SpawnRotation, SpawnParameters);
+	for (int i = 0; i < spawnAmount; ++i) {
+		FVector SpawnLocation = GetActorLocation();
+
+		SpawnLocation.X += (rand() % SpawnRadius * 2) - SpawnRadius;
+		SpawnLocation.Y += (rand() % SpawnRadius * 2) - SpawnRadius;
+
+		FRotator SpawnRotation;
+
+		GetWorld()->SpawnActor<AActor>(ToSpawn, SpawnLocation, SpawnRotation, SpawnParameters);
+	}
+
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(rand(), 1.f, FColor::Purple, "Spawn tick");
+	}
 }
