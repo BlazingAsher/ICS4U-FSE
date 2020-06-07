@@ -2,7 +2,7 @@
 
 
 #include "Enemy.h"
-#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 #include <algorithm>
 #include <cstdlib>
 #include <ICS4UFSE_CPP\ICS4UFSE_CPPCharacter.h>
@@ -17,12 +17,21 @@ AEnemy::AEnemy()
 	// By default, the armour is zero
 	armour = FArmour();
 
-	MyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MyMesh"));
-	RootComponent = MyMesh;
+	//GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...
+	//GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+
+	/*MyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MyMesh"));
+	RootComponent = MyMesh;*/
+	
+	BaseCollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BaseCapsuleComponent"));
+	RootComponent = BaseCollisionComponent;
+
+	//GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	MySkeleton = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MySkeleton"));
-	MySkeleton->SetCollisionProfileName("Trigger");
+	MySkeleton->SetCollisionProfileName("Pawn");
 	MySkeleton->SetupAttachment(RootComponent);
+	MySkeleton->SetEnableGravity(true);
 
 }
 
@@ -89,6 +98,14 @@ void AEnemy::Walk(bool running)
 	FVector Facing = GetActorRotation().Vector();
 	Facing *= running ? ms : ms / 3;
 	SetActorLocationAndRotation(GetActorLocation() + Facing, GetActorRotation());
+
+	//FRotator Rotation = GetActorRotation();
+	//FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	//FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	//AddMovementInput(Facing, ms/2.f);
+	//AddMovementInput(FVector(0,0,0), ms/2.f);
 }
 
 // Setters and getters

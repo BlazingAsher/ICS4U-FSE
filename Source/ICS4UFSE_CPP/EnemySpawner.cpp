@@ -39,7 +39,10 @@ void AEnemySpawner::Spawn()
 {
 	FActorSpawnParameters SpawnParameters;
 
-	int spawnAmount = MinSpawnNum + rand() % (MaxSpawnNum - MinSpawnNum);
+	int spawnAmount = MinSpawnNum;
+	if (MinSpawnNum != MaxSpawnNum) {
+		spawnAmount+=rand() % (MaxSpawnNum - MinSpawnNum);
+	}
 
 	for (int i = 0; i < spawnAmount; ++i) {
 		FVector SpawnLocation = GetActorLocation();

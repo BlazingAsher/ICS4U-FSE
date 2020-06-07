@@ -27,14 +27,14 @@ void ASerpentine::BeginPlay()
 
 	Super::BeginPlay();
 	SType = Fangpyre;
-	/*using namespace std::chrono;
+	using namespace std::chrono;
 	auto ct = high_resolution_clock::now().time_since_epoch();
 	long long ns = duration_cast<microseconds>(ct).count() % 8;
 
 	if (ns >= 4)
 		SType = SerpentineType::Basic;
 	else
-		SType = (SerpentineType)(SerpentineType::Basic + ns);*/
+		SType = (SerpentineType)(SerpentineType::Basic + ns);
 
 }
 
@@ -56,6 +56,7 @@ void ASerpentine::Tick(float DeltaTime)
 	if (magnitude < 2000 && Theta < 60)
 	{
 		SetActorRotation(PosDiff.ToOrientationRotator());
+		//AddControllerYawInput((PosDiff.ToOrientationRotator() - GetActorRotation()).Yaw);
 		Warn();
 
 		if (magnitude < 300)
@@ -76,6 +77,7 @@ void ASerpentine::Tick(float DeltaTime)
 		{
 			float pitch = RndNum / 10, yaw = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now()).time_since_epoch().count() % 360;
 			SetActorRotation({ pitch, yaw, 0.0f });
+			//AddControllerYawInput(yaw - GetActorRotation().Yaw);
 		}
 	}
 

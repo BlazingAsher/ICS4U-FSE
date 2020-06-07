@@ -40,7 +40,7 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCharacterMovement()->JumpZVelocity = 400.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -497,29 +497,42 @@ void AICS4UFSE_CPPCharacter::AddSpell() {
 	SpecialAttackProgress++;
 }
 
-TEnumAsByte<SpecialAttack>& operator++(TEnumAsByte<SpecialAttack>& x)
-{
-	x = (SpecialAttack)(x.GetValue() + 1);
-	return x;
-}
-
-TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, const TEnumAsByte<SpecialAttack>& y)
-{
-	x = (SpecialAttack)(x.GetValue() % y.GetValue());
-	return x;
-}
-
-TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, int y)
-{
-	x %= TEnumAsByte<SpecialAttack>(y);
-	return x;
-}
+//TEnumAsByte<SpecialAttack>& operator++(TEnumAsByte<SpecialAttack>& x)
+//{
+//	x = (SpecialAttack)(x.GetValue() + 1);
+//	return x;
+//}
+//
+//TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, const TEnumAsByte<SpecialAttack>& y)
+//{
+//	x = (SpecialAttack)(x.GetValue() % y.GetValue());
+//	return x;
+//}
+//
+//TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, int y)
+//{
+//	x %= TEnumAsByte<SpecialAttack>(y);
+//	return x;
+//}
 
 void AICS4UFSE_CPPCharacter::CycleSpell() {
 	
-	++SelectedSpecial;
-	SelectedSpecial %= SpecialAttackProgress;
-
+	if (SelectedSpecial == SpecialAttack::None && SpecialAttackProgress > 0) {
+		SelectedSpecial = SpecialAttack::Spin;
+	}
+	else if (SelectedSpecial == SpecialAttack::Spin && SpecialAttackProgress > 1) {
+		SelectedSpecial = SpecialAttack::Tornado;
+	}
+	else if (SelectedSpecial == SpecialAttack::Tornado && SpecialAttackProgress > 2) {
+		SelectedSpecial = SpecialAttack::Elemental;
+	}
+	else if (SelectedSpecial == SpecialAttack::Elemental) {
+		SelectedSpecial = SpecialAttack::Spin;
+	}
+	else {
+		SelectedSpecial = SpecialAttack::None;
+	}
+	
 	if (GEngine) {
 		int attackID = SelectedSpecial;
 		GEngine->AddOnScreenDebugMessage(-14, 5.0f, FColor::Green, "Changed special attack to " + FString::FromInt(attackID));

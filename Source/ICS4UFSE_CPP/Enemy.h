@@ -8,6 +8,7 @@
 #include "Armour.h"
 #include "DmgType.h"
 #include "GameFramework/Actor.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -85,8 +86,11 @@ protected:
 	float DmgKnockback;
 
 	// Mesh and Collision Components
+	//UPROPERTY(EditAnywhere)
+	//class USkeletalMeshComponent* MyMesh;
+
 	UPROPERTY(EditAnywhere)
-	class USkeletalMeshComponent* MyMesh;
+		class UCapsuleComponent* BaseCollisionComponent;
 
 	UPROPERTY(EditAnywhere)
 	class USkeletalMeshComponent* MySkeleton;
