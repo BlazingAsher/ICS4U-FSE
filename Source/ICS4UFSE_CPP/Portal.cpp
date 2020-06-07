@@ -20,7 +20,7 @@ APortal::APortal()
 //	MyBoxComponent->SetCollisionProfileName("Trigger");
 //	MyBoxComponent->SetupAttachment(RootComponent);
 	PortalComponent = CreateDefaultSubobject<USphereComponent>(TEXT("PortalComponent"));
-	PortalComponent->InitSphereRadius(50);
+	PortalComponent->InitSphereRadius(51);
 	PortalComponent->SetCollisionProfileName(TEXT("Trigger"));
 	PortalComponent->SetupAttachment(RootComponent);
 
@@ -57,6 +57,10 @@ void APortal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AA
 				OtherActor->SetActorLocation(FVector(-27310.0, 65120.0, 210.0));
 			}
 			else {
+				// launches the player if the portal is not active yet
+				AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*OtherActor);
+				player.LaunchPlayer((FVector(0, 0, 1) + player.GetActorLocation() - GetActorLocation()) * 10);
+
 				if (GEngine) {
 					GEngine->AddOnScreenDebugMessage(-10, 5.0f, FColor::Red, "This portal is not yet active!");
 				}

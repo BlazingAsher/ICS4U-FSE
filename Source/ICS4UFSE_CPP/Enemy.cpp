@@ -17,13 +17,12 @@ AEnemy::AEnemy()
 	// By default, the armour is zero
 	armour = FArmour();
 
-	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
+	MyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
 
-	MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
-	MyBoxComponent->InitBoxExtent(FVector(50, 50, 50));
-	MyBoxComponent->SetCollisionProfileName("Trigger");
-	MyBoxComponent->SetupAttachment(RootComponent);
+	MySkeleton = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MySkeleton"));
+	MySkeleton->SetCollisionProfileName("Trigger");
+	MySkeleton->SetupAttachment(RootComponent);
 
 }
 
@@ -90,4 +89,15 @@ void AEnemy::Walk(bool running)
 	FVector Facing = GetActorRotation().Vector();
 	Facing *= running ? ms : ms / 3;
 	SetActorLocationAndRotation(GetActorLocation() + Facing, GetActorRotation());
+}
+
+// Setters and getters
+void AEnemy::SetMaxDmg(float f)
+{
+	MaxDmg = f;
+}
+
+float AEnemy::GetMaxDmg()
+{
+	return MaxDmg;
 }

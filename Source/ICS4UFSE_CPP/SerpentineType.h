@@ -2,4 +2,4 @@
 #pragma once
 #include "CoreMinimal.h"
 UENUM()
-enum DmgType {   DmgMelee, DmgFall, DmgPoison, DmgSuffocate, DmgDebug   };
+enum SerpentineType { Basic, Constrictai, Fangpyre, Hypnobrai, Venomari };

@@ -7,6 +7,7 @@
 #include "TimerManager.h"
 #include "Armour.h"
 #include "DmgType.h"
+#include <ICS4UFSE_CPP\Enemy.h>
 #include <ICS4UFSE_CPP\PainVolume.h>
 #include <ICS4UFSE_CPP\ParticleSpawner.h>
 #include <ICS4UFSE_CPP\SpecialAttack.h>
@@ -92,7 +93,14 @@ public:
 
 	FArmour PlayerArmour;
 
-	
+	AActor* StuckTo;
+
+	bool IsHypnotized;
+
+	FVector HTPO;
+
+	UPROPERTY(EditAnywhere)
+	FVector SpawnPoint;
 
 protected:
 
@@ -220,5 +228,10 @@ public:
 
 	UFUNCTION()
 		void SetSpell(SpecialAttack toBeSet);
+
+	void BeHypnotized(const AEnemy& enemy);
+
+	UFUNCTION()
+		void Respawn();
 
 };

@@ -13,14 +13,29 @@ ASerpentine::ASerpentine()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	AlreadySpawned = false;
+
+	void** tmp = reinterpret_cast<void**>(&CMaterial);
+	for (int i = 0; i < 8; i++)
+		Materials[i] = reinterpret_cast<UMaterial**>(tmp + std::min(4, i));
 
 }
 
 // Called when the game starts or when spawned
 void ASerpentine::BeginPlay()
 {
+
 	Super::BeginPlay();
-	
+	SType = Fangpyre;
+	/*using namespace std::chrono;
+	auto ct = high_resolution_clock::now().time_since_epoch();
+	long long ns = duration_cast<microseconds>(ct).count() % 8;
+
+	if (ns >= 4)
+		SType = SerpentineType::Basic;
+	else
+		SType = (SerpentineType)(SerpentineType::Basic + ns);*/
+
 }
 
 extern template class TArray<AActor*>;
@@ -89,6 +104,39 @@ void ASerpentine::Tick(float DeltaTime)
 	if (WarnInited && WarnTimer > 0)
 		--WarnTimer;
 
+	if (SType && magnitude < 400)
+	{
+
+		// special serpentine attacks
+		using namespace std::chrono;
+		auto ct = high_resolution_clock::now().time_since_epoch();
+		long long ns = duration_cast<microseconds>(ct).count();
+
+		if (ns % 3600 == 1729)
+		{
+
+			// cast reference for player type
+			AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*GetWorld()->GetFirstPlayerController()->GetPawn());
+			switch (SType)
+			{
+			case Constrictai:
+				CAttack(player);
+				break;
+			case Fangpyre:
+				FAttack(player);
+				break;
+			case Hypnobrai:
+				HAttack(player);
+				break;
+			case Venomari:
+				VAttack(player);
+				break;
+			}
+
+		}
+
+	}
+
 	// Setting the actor location will cause the rotation to update, and vice versa
 	// Setting the actor rotation will do nothing if location is not set
 	SetActorLocation(ThisPos);
@@ -109,4 +157,26 @@ void ASerpentine::BeWarned(const FVector& PlayerPos)
 {
 	SetActorRotation(PlayerPos.ToOrientationRotator());
 	SetActorLocation(GetActorLocation());
+}
+
+// Functions for different types of serpentine
+void ASerpentine::CAttack(AICS4UFSE_CPPCharacter& player)
+{
+	player.StuckTo = this;
+}
+
+void ASerpentine::FAttack(AICS4UFSE_CPPCharacter& player)
+{
+	player.ApplyDamage(std::numeric_limits<float>::infinity(), DmgType::DmgPoison);
+}
+
+void ASerpentine::HAttack(AICS4UFSE_CPPCharacter& player)
+{
+	player.BeHypnotized(*this);
+}
+
+void ASerpentine::VAttack(AICS4UFSE_CPPCharacter& player)
+{
+	AlreadySpawned = true;
+	GetWorld()->SpawnActor<AActor>(FakeSpawner, GetTransform());
 }

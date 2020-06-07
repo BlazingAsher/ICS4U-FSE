@@ -18,6 +18,7 @@
 #include "Engine/Engine.h"
 #include "UObject/UObjectIterator.h"
 #include <ICS4UFSE_CPP\Portal.h>
+#include <chrono>
 
 //////////////////////////////////////////////////////////////////////////
 // AICS4UFSE_CPPCharacter
@@ -72,6 +73,11 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	attackState = 0;
 
 	playerEnergy = 0.5f;
+
+	StuckTo = nullptr;
+
+	IsHypnotized = false;
+
 }
 
 void AICS4UFSE_CPPCharacter::BeginPlay()
@@ -150,12 +156,44 @@ void AICS4UFSE_CPPCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector
 
 void AICS4UFSE_CPPCharacter::Tick(float DeltaTime)
 {
+
 	Super::Tick(DeltaTime);
+
 	if (LaunchIncr < 60 * LaunchIncrIncr)
 	{
 		SetActorLocation(GetActorLocation() + Launch * LaunchIncr);
 		LaunchIncr += LaunchIncrIncr;
 	}
+
+	if (IsHypnotized && !StuckTo)
+	{
+
+		using namespace std::chrono;
+
+		auto ct = high_resolution_clock::now().time_since_epoch();
+		long long ns = duration_cast<microseconds>(ct).count();
+
+		if (ns % 15 == 13)
+		{
+
+			// generate the angle
+			ct = high_resolution_clock::now().time_since_epoch();
+			ns = duration_cast<microseconds>(ct).count();
+			float theta = ns % 360;
+
+			// generate the distance
+			ct = high_resolution_clock::now().time_since_epoch();
+			ns = duration_cast<microseconds>(ct).count();
+			float dist = ns % 200;
+
+			SetActorLocation(HTPO + FVector(std::cos(theta) * dist, std::sin(theta) * dist, 50));
+			SetActorRotation({ 0, theta, 0 });
+		}
+
+	}
+	else if (StuckTo)
+		ApplyDamage(0.1, DmgSuffocate, StuckTo);
+
 }
 
 void AICS4UFSE_CPPCharacter::OnSpecialAttack()
@@ -230,6 +268,18 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 	// Stop the animation
 	attackState = 0;
 
+	if (StuckTo)
+	{
+		AEnemy& enemy = dynamic_cast<AEnemy&>(*StuckTo);
+		if (GetLvl() * 15 + 30 >= enemy.GetMaxDmg())
+		{
+			StuckTo = nullptr;
+			// deal damage to the enemy
+			enemy.ApplyDamage(enemy.GetMaxDmg() - GetLvl() * 15 - 30, DmgType::DmgMelee, this);
+		}
+		return;
+	}
+
 	TArray<AActor*>actors;
 	AEnemy* aep;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TSubclassOf<AActor>(AEnemy::StaticClass()), actors);
@@ -245,6 +295,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 
 		if (PosDiff.Size() < 300 && std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) < 3.1415926535897932 / 3)
 		{
+
 			// deal damage to the enemy
 			//aep->ApplyDamage(GetLvl() + 1, DmgType::DmgMelee, this);
 			aep->ApplyDamage(GetLvl() * 15 + 30, DmgType::DmgMelee, this);
@@ -302,7 +353,10 @@ void AICS4UFSE_CPPCharacter::LookUpAtRate(float Rate)
 
 void AICS4UFSE_CPPCharacter::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if (StuckTo && StuckTo->IsActorBeingDestroyed())
+		StuckTo = nullptr;
+	
+	if (!StuckTo && (Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -316,7 +370,10 @@ void AICS4UFSE_CPPCharacter::MoveForward(float Value)
 
 void AICS4UFSE_CPPCharacter::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	if (StuckTo && StuckTo->IsActorBeingDestroyed())
+		StuckTo = nullptr;
+
+	if (!StuckTo && (Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -336,14 +393,15 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src
 	{
 		// apply armour damage
 		playerHealth -= PlayerArmour - Damage;
-		if (playerHealth < 0)
-			playerHealth = 0;
 	}
 	else
 		playerHealth = std::max(0.0f, playerHealth - Damage);
 	
 	ArmourHardness = PlayerArmour.Hardness();
 	ArmourToughness = PlayerArmour.Toughness();
+
+	if (playerHealth <= 0)
+		Respawn();
 
 }
 
@@ -439,29 +497,58 @@ void AICS4UFSE_CPPCharacter::AddSpell() {
 	SpecialAttackProgress++;
 }
 
+TEnumAsByte<SpecialAttack>& operator++(TEnumAsByte<SpecialAttack>& x)
+{
+	x = (SpecialAttack)(x.GetValue() + 1);
+	return x;
+}
+
+TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, const TEnumAsByte<SpecialAttack>& y)
+{
+	x = (SpecialAttack)(x.GetValue() % y.GetValue());
+	return x;
+}
+
+TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, int y)
+{
+	x %= TEnumAsByte<SpecialAttack>(y);
+	return x;
+}
+
 void AICS4UFSE_CPPCharacter::CycleSpell() {
-	if (SelectedSpecial == SpecialAttack::None && SpecialAttackProgress > 0) {
-		SelectedSpecial = SpecialAttack::Spin;
-	}
-	else if (SelectedSpecial == SpecialAttack::Spin && SpecialAttackProgress > 1) {
-		SelectedSpecial = SpecialAttack::Tornado;
-	}
-	else if (SelectedSpecial == SpecialAttack::Tornado && SpecialAttackProgress > 2) {
-		SelectedSpecial = SpecialAttack::Elemental;
-	}
-	else if (SelectedSpecial == SpecialAttack::Elemental) {
-		SelectedSpecial = SpecialAttack::Spin;
-	}
-	else {
-		SelectedSpecial = SpecialAttack::None;
-	}
+	
+	++SelectedSpecial;
+	SelectedSpecial %= SpecialAttackProgress;
 
 	if (GEngine) {
 		int attackID = SelectedSpecial;
 		GEngine->AddOnScreenDebugMessage(-14, 5.0f, FColor::Green, "Changed special attack to " + FString::FromInt(attackID));
 	}
+
 }
 
 void AICS4UFSE_CPPCharacter::SetSpell(SpecialAttack toBeSet) {
 	SelectedSpecial = toBeSet;
+}
+
+void AICS4UFSE_CPPCharacter::BeHypnotized(const AEnemy& enemy)
+{
+	float theta = std::acos(GetActorRotation().Vector() | enemy.GetActorRotation().Vector()) * 180 / 3.1415926535897932;
+	HTPO = GetActorLocation();
+	if (theta <= 9)
+		IsHypnotized = true;
+}
+
+void AICS4UFSE_CPPCharacter::Respawn()
+{
+	SetActorLocation(SpawnPoint);
+	SetActorRotation({ 0, 0, 0 });
+	exp = 0;
+	PortalProgress = 0;
+	SpecialAttackProgress = 0;
+	playerHealth = MaxHealth;
+	attackState = 0;
+	playerEnergy = 0.5f;
+	StuckTo = nullptr;
+	IsHypnotized = false;
 }

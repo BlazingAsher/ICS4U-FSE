@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include<cmath>
+#include <algorithm>
+#include <cmath>
 #include "Armour.h"
 #include "DmgType.h"
 #include "GameFramework/Actor.h"
@@ -40,6 +41,10 @@ public:
 
 	// Walk the enemy
 	virtual void Walk(bool running = false);
+
+	// Setters and getters
+	void SetMaxDmg(float f);
+	float GetMaxDmg();
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -80,10 +85,10 @@ protected:
 	float DmgKnockback;
 
 	// Mesh and Collision Box Components
-	UPROPERTY(VisibleAnywhere)
-	class UStaticMeshComponent* MyMesh;
+	UPROPERTY(EditAnywhere)
+	class USkeletalMeshComponent* MyMesh;
 
 	UPROPERTY()
-	class UBoxComponent* MyBoxComponent;
+	class USkeletalMeshComponent* MySkeleton;
 
 };
