@@ -84,11 +84,11 @@ protected:
 	// Damage knockback
 	float DmgKnockback;
 
-	// Mesh and Collision Box Components
+	// Mesh and Collision Components
 	UPROPERTY(EditAnywhere)
 	class USkeletalMeshComponent* MyMesh;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class USkeletalMeshComponent* MySkeleton;
 
 };
