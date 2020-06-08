@@ -16,18 +16,10 @@ AEnemy::AEnemy()
 
 	// By default, the armour is zero
 	armour = FArmour();
-
-	//GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...
-	//GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-
-	/*MyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MyMesh"));
-	RootComponent = MyMesh;*/
 	
 	BaseCollisionComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BaseCapsuleComponent"));
 	RootComponent = BaseCollisionComponent;
-
-	//GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
+	// create the skeleton
 	MySkeleton = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MySkeleton"));
 	MySkeleton->SetCollisionProfileName("Pawn");
 	MySkeleton->SetupAttachment(RootComponent);
@@ -39,7 +31,6 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -59,6 +50,7 @@ void AEnemy::Tick(float DeltaTime)
 // Destroys the enemy
 void AEnemy::Destroy(bool x, bool y)
 {
+	// adds exp to player if it is a player
 	if (dynamic_cast<AICS4UFSE_CPPCharacter*>(lab))
 		((AICS4UFSE_CPPCharacter*)lab)->AddExp(exp);
 	Super::Destroy(x, y);
@@ -95,17 +87,10 @@ void AEnemy::Attack(AActor* actor)
 
 void AEnemy::Walk(bool running)
 {
+	// walks in the direction it is facing at a speed relative to its maximum speed
 	FVector Facing = GetActorRotation().Vector();
 	Facing *= running ? ms : ms / 3;
 	SetActorLocationAndRotation(GetActorLocation() + Facing, GetActorRotation());
-
-	//FRotator Rotation = GetActorRotation();
-	//FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	//FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-	//AddMovementInput(Facing, ms/2.f);
-	//AddMovementInput(FVector(0,0,0), ms/2.f);
 }
 
 // Setters and getters

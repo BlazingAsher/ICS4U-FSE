@@ -39,7 +39,7 @@ void ADoor::Tick(float DeltaTime)
 			FRotator ThisRot = GetActorRotation();
 			FVector ThisPos = GetActorLocation();
 			FRotator PivDiff = (ThisPos - DefaultPosition - Pivot).ToOrientationRotator();
-
+			// tests for the direction to open
 			if (YawPos == IsOpen)
 				ThisRot.Yaw += MaxTurn / Weight;
 			else
@@ -48,10 +48,12 @@ void ADoor::Tick(float DeltaTime)
 				PivDiff.Yaw += MaxTurn / Weight;
 			else
 				PivDiff.Yaw -= MaxTurn / Weight;
-			ThisPos = DefaultPosition + Pivot + PivDiff.Vector() * Pivot.Size();
+			ThisPos = DefaultPosition + Pivot + PivDiff.Vector() * Pivot.Size();// calculates position
 
+			// sets the actor location and rotation
 			SetActorRotation(ThisRot);
 			SetActorLocation(ThisPos);
+			// keeps track of how much it turned
 			DegsAnimated += MaxTurn / Weight;
 		}
 		else

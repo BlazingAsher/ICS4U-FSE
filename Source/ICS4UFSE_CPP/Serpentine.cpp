@@ -26,7 +26,7 @@ void ASerpentine::BeginPlay()
 {
 
 	Super::BeginPlay();
-	SType = Fangpyre;
+	// uses time to get random number
 	using namespace std::chrono;
 	auto ct = high_resolution_clock::now().time_since_epoch();
 	long long ns = duration_cast<microseconds>(ct).count() % 8;
@@ -36,7 +36,7 @@ void ASerpentine::BeginPlay()
 	else
 	{
 		SType = (SerpentineType)(SerpentineType::Basic + ns);
-		//TSubclassOf<AParticleSpawner>* TBS = &CEffect + ns;
+		// spawns the right particle effects
 		TSubclassOf<AParticleSpawner> SpawnerClass;
 
 		if (SType == SerpentineType::Constrictai) {
@@ -51,7 +51,7 @@ void ASerpentine::BeginPlay()
 		else if (SType == SerpentineType::Venomari) {
 			SpawnerClass = VEffect;
 		}
-		
+		// spawns in particle spawner
 		if (SpawnerClass) {
 			AParticleSpawner* ParticleReference = GetWorld()->SpawnActor<AParticleSpawner>(SpawnerClass, GetTransform());
 			ParticleReference->SetFollow(this);
@@ -61,6 +61,7 @@ void ASerpentine::BeginPlay()
 	
 }
 
+// tell the compiler that the templated class is compiled elsewhere
 extern template class TArray<AActor*>;
 
 // Called every frame
@@ -68,6 +69,7 @@ void ASerpentine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// get positions
 	FVector PlayerPos = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(), ThisPos = GetActorLocation();
 	FVector PosDiff = PlayerPos - ThisPos;
 	float magnitude = PosDiff.Size();
@@ -82,6 +84,7 @@ void ASerpentine::Tick(float DeltaTime)
 		//AddControllerYawInput((PosDiff.ToOrientationRotator() - GetActorRotation()).Yaw);
 		Warn();
 
+		// attack the player if close enough, otherwise, walk
 		if (magnitude < 300)
 		{
 			Attack(GetWorld()->GetFirstPlayerController()->GetPawn());
@@ -104,19 +107,21 @@ void ASerpentine::Tick(float DeltaTime)
 		}
 	}
 
+	// sees if warning cooldown has finished
 	if (WarnInited && WarnTimer == 0)
 	{
-		// Get all of the actors and warn them if they are also a Skulkin
+		// Get all of the actors and warn them if they are also a Serpentine
 		WarnInited = false;
 
 		TArray<AActor*>actors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASerpentine::StaticClass(), actors);
-
+		
+		// loops through all the actors
 		for (auto begin = actors.begin(); begin != actors.end(); ++begin)
 		{
 			if (*begin != this)
 			{
-				// cast the reference
+				// cast the reference and warn it if it is within range
 				ASerpentine& sk = dynamic_cast<ASerpentine&>(**begin);
 				if ((PlayerPos - sk.GetActorLocation()).Size() < 25000)
 					sk.BeWarned(PlayerPos - sk.GetActorLocation());
@@ -142,6 +147,7 @@ void ASerpentine::Tick(float DeltaTime)
 
 			// cast reference for player type
 			AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*GetWorld()->GetFirstPlayerController()->GetPawn());
+			// do the special attacks
 			switch (SType)
 			{
 			case Constrictai:
@@ -178,6 +184,7 @@ void ASerpentine::Warn()
 	}
 }
 
+// be warned by another serpentine
 void ASerpentine::BeWarned(const FVector& PlayerPos)
 {
 	SetActorRotation(PlayerPos.ToOrientationRotator());
@@ -202,9 +209,9 @@ void ASerpentine::HAttack(AICS4UFSE_CPPCharacter& player)
 
 void ASerpentine::VAttack(AICS4UFSE_CPPCharacter& player)
 {
+	// spawns in fake serpentine spawner
 	if (!AlreadySpawned) {
 		AlreadySpawned = true;
 		GetWorld()->SpawnActor<AActor>(FakeSpawner, GetTransform());
 	}
-	
 }
