@@ -12,6 +12,7 @@ AArmourItem::AArmourItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Initialize the mesh and components
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
 
@@ -34,11 +35,14 @@ void AArmourItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Check if player has collided with this item
+	// If so, add armour value
 	AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*GetWorld()->GetFirstPlayerController()->GetPawn());
 	if ((player.GetActorLocation() - GetActorLocation()).Size() < 150)
 	{
 		player.PlayerArmour.Hardness(player.PlayerArmour.Hardness() + HardImpr);
 		player.PlayerArmour.Toughness(player.PlayerArmour.Toughness() + ToughImpr);
+		player.PlayPickupSound();
 		Destroy();
 	}
 

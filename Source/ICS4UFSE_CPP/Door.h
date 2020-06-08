@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Door actor for dours
 
 #pragma once
 
@@ -11,8 +12,8 @@ UCLASS()
 class ICS4UFSE_CPP_API ADoor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ADoor();
 
@@ -20,7 +21,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -42,32 +43,35 @@ public:
 	void AnimDegrees(float f);
 
 	FVector DoorPivot();
-	void DoorPivot(const FVector&piv);
+	void DoorPivot(const FVector& piv);
 
 protected:
 	// Is the door already open
 	bool IsOpen;
-	
+
 	// Is the door being opened or closed
 	bool IsAnimating;
 
 	// Direction for opening the door
 	UPROPERTY(EditAnywhere)
-	bool YawPos;
+		bool YawPos;
 
 	// How many degrees the door turned
 	float DegsAnimated;
 
 	UPROPERTY(EditAnywhere)
-	// The most that the door will turn
-	float MaxTurn;
+		// The most that the door will turn
+		float MaxTurn;
 
 	UPROPERTY(EditAnywhere)
-	// The weight determines how fast the door turns
-	float Weight;
+		// The weight determines how fast the door turns
+		float Weight;
 
 	UPROPERTY(EditAnywhere)
-	// The relative point where the door is turned about
-	FVector Pivot;
+		// The relative point where the door is turned about
+		FVector Pivot;
+
+	// default position, before being turned
+	FVector DefaultPosition;
 
 };

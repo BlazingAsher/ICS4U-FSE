@@ -6,7 +6,7 @@
 // Sets default values
 ADoor::ADoor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Set default animating and open state
@@ -22,7 +22,7 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	DefaultPosition = GetActorLocation();
 }
 
 // Called every frame
@@ -38,7 +38,7 @@ void ADoor::Tick(float DeltaTime)
 			// gets the location and rotation
 			FRotator ThisRot = GetActorRotation();
 			FVector ThisPos = GetActorLocation();
-			FRotator PivDiff = (-Pivot).ToOrientationRotator();
+			FRotator PivDiff = (ThisPos - DefaultPosition - Pivot).ToOrientationRotator();
 
 			if (YawPos == IsOpen)
 				ThisRot.Yaw += MaxTurn / Weight;
@@ -48,7 +48,7 @@ void ADoor::Tick(float DeltaTime)
 				PivDiff.Yaw += MaxTurn / Weight;
 			else
 				PivDiff.Yaw -= MaxTurn / Weight;
-			ThisPos = Pivot + PivDiff.Vector() * (ThisPos - Pivot).Size();
+			ThisPos = DefaultPosition + Pivot + PivDiff.Vector() * Pivot.Size();
 
 			SetActorRotation(ThisRot);
 			SetActorLocation(ThisPos);

@@ -54,6 +54,7 @@ void APortal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AA
 	{
 		if (dynamic_cast<AICS4UFSE_CPPCharacter*>(OtherActor)) {
 			if (((AICS4UFSE_CPPCharacter*)OtherActor)->HasPortal()) {
+				UGameplayStatics::PlaySound2D(GetWorld(), TeleportSound, 1.0f, 1.0f);
 				OtherActor->SetActorLocation(FVector(-27310.0, 65120.0, 210.0));
 			}
 			else {

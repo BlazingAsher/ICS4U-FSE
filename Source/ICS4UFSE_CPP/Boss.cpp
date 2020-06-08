@@ -30,12 +30,17 @@ void ABoss::BeginPlay()
 // Called every frame
 void ABoss::Tick(float DeltaTime)
 {
+	if (hp < 1) {
+		UGameplayStatics::PlaySound2D(GetWorld(), VictorySound, 1.0f, 1.0f);
+	}
+
 	Super::Tick(DeltaTime);
 
 	AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*GetWorld()->GetFirstPlayerController()->GetPawn());
 	FVector PosDiff = player.GetActorLocation() - GetActorLocation();
 	float Theta = std::acos((PosDiff | GetActorRotation().Vector()) / PosDiff.Size()) * 180 / 3.1415926535897932;
 	
+	// Boss turns slowly to give you change to attack it from the side
 	if (Theta < 1)
 		SetActorRotation(PosDiff.ToOrientationQuat());
 	else

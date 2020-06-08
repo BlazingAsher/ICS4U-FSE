@@ -24,6 +24,30 @@ void AFakeSerpentine::Attack(AActor* actor)
 
 }
 
+// Attacks the player
+void AFakeSerpentine::HAttack(AICS4UFSE_CPPCharacter& player)
+{
+
+}
+
+// Attacks the player
+void AFakeSerpentine::VAttack(AICS4UFSE_CPPCharacter& player)
+{
+
+}
+
+// Attacks the player
+void AFakeSerpentine::FAttack(AICS4UFSE_CPPCharacter& player)
+{
+
+}
+
+// Attacks the player
+void AFakeSerpentine::CAttack(AICS4UFSE_CPPCharacter& player)
+{
+
+}
+
 void AFakeSerpentine::DefaultDestroy() {
 	Destroy();
 }

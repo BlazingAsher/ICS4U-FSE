@@ -44,6 +44,7 @@ void ASpellLearner::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 		// Cast to the player character, add the spell, and self-destruct
 		if (dynamic_cast<AICS4UFSE_CPPCharacter*>(OtherActor)) {
 			((AICS4UFSE_CPPCharacter*)OtherActor)->AddSpell();
+			((AICS4UFSE_CPPCharacter*)OtherActor)->PlayPickupSound();
 			if (GEngine) {
 				GEngine->AddOnScreenDebugMessage(-110, 5.0f, FColor::Green, "You learned a new spell!");
 			}

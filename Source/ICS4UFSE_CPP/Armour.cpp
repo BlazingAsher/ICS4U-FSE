@@ -46,7 +46,7 @@ float FArmour::CalcDmg(float Orig)
         Orig -= Tough;
         return Orig + CalcDmg(Tough);
     }
-
+    // Return a damage value based on the current armour state
     return min(Orig * Orig * Orig * 8 / (exp(3 * Hard) + exp(2 * Hard) * 3 + exp(Hard) * 3 + 1), Orig * 2 / (1 + exp(Hard)));
 }
 

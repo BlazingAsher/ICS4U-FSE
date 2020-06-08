@@ -21,11 +21,25 @@ class ICS4UFSE_CPP_API AFakeSerpentine : public ASerpentine
 	// Override so that it cannot attack
 	virtual void Attack(AActor* actor);
 
+	// Override so that it cannot attack
+	virtual void CAttack(AICS4UFSE_CPPCharacter& player);
+
+	// Override so that it cannot attack
+	virtual void VAttack(AICS4UFSE_CPPCharacter& player);
+
+	// Override so that it cannot attack
+	virtual void HAttack(AICS4UFSE_CPPCharacter& player);
+
+	// Override so that it cannot attack
+	virtual void FAttack(AICS4UFSE_CPPCharacter& player);
+
 	void BeginPlay();
 
 public:
+	// Destroy wrapper without parameters
 	void DefaultDestroy();
 
+	// How long this ghost should live
 	UPROPERTY(EditDefaultsOnly)
 		float lifespan = 10.f;
 };

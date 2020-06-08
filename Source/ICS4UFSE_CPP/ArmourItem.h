@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Item that players can pick up to restore armour status
 
 #pragma once
 
@@ -33,6 +34,7 @@ protected:
 	// Toughness increment
 	float ToughImpr = 5;
 
+	// Item mesh and collision components
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* MyMesh;
 

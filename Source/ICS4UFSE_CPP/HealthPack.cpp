@@ -29,6 +29,7 @@ void AHealthPack::Tick(float DeltaTime)
 	if ((player.GetActorLocation() - GetActorLocation()).Size() < 100)
 	{
 		player.Heal(RecoveryPower);
+		player.PlayPickupSound();
 		Destroy();
 	}
 

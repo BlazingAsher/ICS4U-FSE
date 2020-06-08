@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Item that can be picked up to restore health to the player
 
 #pragma once
 
@@ -25,6 +26,7 @@ public:
 
 protected:
 
+	// Amount of health to recover
 	UPROPERTY(EditAnywhere)
 	float RecoveryPower = 1;
 

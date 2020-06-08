@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Utility for calculating distances
 
 #pragma once
 

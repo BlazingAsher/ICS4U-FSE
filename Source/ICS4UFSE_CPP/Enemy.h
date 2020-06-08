@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Base class for all enemies of the player
 
 #pragma once
 
@@ -86,8 +87,6 @@ protected:
 	float DmgKnockback;
 
 	// Mesh and Collision Components
-	//UPROPERTY(EditAnywhere)
-	//class USkeletalMeshComponent* MyMesh;
 
 	UPROPERTY(EditAnywhere)
 		class UCapsuleComponent* BaseCollisionComponent;

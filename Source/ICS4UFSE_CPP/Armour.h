@@ -1,4 +1,6 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Representation of an Actor's armour
+// Allows for querying of toughness and hardness to apply to damage taken
 
 #pragma once
 

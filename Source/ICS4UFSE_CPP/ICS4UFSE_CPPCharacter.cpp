@@ -40,7 +40,7 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 400.f;
+	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -245,6 +245,8 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 			}
 		}
 
+		UGameplayStatics::PlaySound2D(GetWorld(), SpecialSound, 1.0f, 1.0f);
+
 		// Deduct energy from player
 		RemoveEnergy(requiredEnergy);
 	}
@@ -261,6 +263,7 @@ void AICS4UFSE_CPPCharacter::OnAttack()
 {
 	// Start the punching animation
 	attackState = 1;
+	UGameplayStatics::PlaySound2D(GetWorld(), PunchSound, 1.0f, 1.0f);
 }
 
 void AICS4UFSE_CPPCharacter::EndAttack()
@@ -554,14 +557,19 @@ void AICS4UFSE_CPPCharacter::BeHypnotized(const AEnemy& enemy)
 
 void AICS4UFSE_CPPCharacter::Respawn()
 {
+	UGameplayStatics::PlaySound2D(GetWorld(), DeathSound, 1.0f, 1.0f);
 	SetActorLocation(SpawnPoint);
 	SetActorRotation({ 0, 0, 0 });
 	exp = 0;
-	PortalProgress = 0;
-	SpecialAttackProgress = 0;
+	//PortalProgress = 0;
+	//SpecialAttackProgress = 0;
 	playerHealth = MaxHealth;
 	attackState = 0;
 	playerEnergy = 0.5f;
 	StuckTo = nullptr;
 	IsHypnotized = false;
+}
+
+void AICS4UFSE_CPPCharacter::PlayPickupSound() {
+	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound, 1.0f, 1.0f);
 }

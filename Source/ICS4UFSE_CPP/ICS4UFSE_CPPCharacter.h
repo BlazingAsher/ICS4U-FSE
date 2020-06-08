@@ -11,6 +11,7 @@
 #include <ICS4UFSE_CPP\PainVolume.h>
 #include <ICS4UFSE_CPP\ParticleSpawner.h>
 #include <ICS4UFSE_CPP\SpecialAttack.h>
+#include "Sound/SoundCue.h"
 #include "ICS4UFSE_CPPCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -86,6 +87,18 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<AParticleSpawner> ElementalParticleSpawner;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+		USoundCue* PunchSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+		USoundCue* SpecialSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+		USoundCue* PickupSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+		USoundCue* DeathSound;
 
 	FVector Launch;
 
@@ -187,51 +200,71 @@ public:
 	UFUNCTION()
 	void RemoveEnergy(float Energy);
 
+	// Get player exp
 	UFUNCTION()
 	int GetExp();
 
+	// Get player level
 	UFUNCTION()
 	int GetLvl();
 
+	// Get amount of exp required to move to next level
 	UFUNCTION()
 	int GetExpToNextLvl();
 
+	// Get amount of exp required to attain level (absolute)
 	UFUNCTION()
 	int GetNextLvlRequiredExp();
 
+	// Give player exp
 	UFUNCTION()
 	void AddExp(int x);
 
+	// Get percent of exp
 	UFUNCTION()
 	float GetExpPercent();
 
+	// Get the player's computed level
 	UFUNCTION()
 	int GetComputedLvl();
 
+	// Add player portal progress
 	UFUNCTION()
 	void AddPortalProgress();
 
+	// Whether the player has spawned the portal in
 	UFUNCTION()
 	bool HasPortal();
 
+	// Heal the player
 	UFUNCTION()
 	void Heal(float hp);
 
+	// Launch the player into the air
 	UFUNCTION()
 	void LaunchPlayer(FVector LaunchDirection);
 
+	// Level up the player's special abilities
 	UFUNCTION()
 		void AddSpell();
 
+	// Cycle through currently selected spell
 	UFUNCTION()
 		void CycleSpell();
 
+	// Set the currently selected spell
 	UFUNCTION()
 		void SetSpell(SpecialAttack toBeSet);
 
+	// Hypnotize the player (freeze)
 	void BeHypnotized(const AEnemy& enemy);
 
+	// Respawn the player
 	UFUNCTION()
 		void Respawn();
+
+	// Play the item pickup sound
+	UFUNCTION()
+		void PlayPickupSound();
 
 };

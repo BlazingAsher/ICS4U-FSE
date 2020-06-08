@@ -46,8 +46,12 @@ void APortalComponent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && GetWorld()->GetFirstPlayerController()->GetPawn() == OtherActor)
 	{
 		// Cast to a player and add portal progress
-		if (dynamic_cast<AICS4UFSE_CPPCharacter*>(OtherActor))
+		if (dynamic_cast<AICS4UFSE_CPPCharacter*>(OtherActor)) {
 			((AICS4UFSE_CPPCharacter*)OtherActor)->AddPortalProgress();
+			((AICS4UFSE_CPPCharacter*)OtherActor)->PlayPickupSound();
+		}
+
+
 
 		// Self destruct
 		Destroy();

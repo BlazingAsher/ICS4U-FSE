@@ -32,6 +32,7 @@ void AParticleSpawner::Tick(float DeltaTime)
 	// Set particle location to location of actor that it is following
 	if (FollowActor) {
 		SetActorLocation(FollowActor->GetActorLocation());
+		SetActorRotation(FollowActor->GetActorRotation());
 	}
 
 }

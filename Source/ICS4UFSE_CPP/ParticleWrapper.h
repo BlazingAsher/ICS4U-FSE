@@ -1,4 +1,5 @@
 // Copyright (c) 2020 David Hui and Kevin Zhang. ALL RIGHTS RESERVED.
+// Wraps particles in an efficient way. Base class for Blueprint.
 
 #pragma once
 

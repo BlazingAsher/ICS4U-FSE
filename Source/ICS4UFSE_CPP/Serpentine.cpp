@@ -36,9 +36,27 @@ void ASerpentine::BeginPlay()
 	else
 	{
 		SType = (SerpentineType)(SerpentineType::Basic + ns);
-		TSubclassOf<AParticleSpawner>* TBS = &CEffect + ns;
-		AParticleSpawner& ParticleReference = *GetWorld()->SpawnActor<AParticleSpawner>(*TBS, GetTransform());
-		ParticleReference.SetFollow(this);
+		//TSubclassOf<AParticleSpawner>* TBS = &CEffect + ns;
+		TSubclassOf<AParticleSpawner> SpawnerClass;
+
+		if (SType == SerpentineType::Constrictai) {
+			SpawnerClass = CEffect;
+		}
+		else if (SType == SerpentineType::Fangpyre) {
+			SpawnerClass = FEffect;
+		}
+		else if (SType == SerpentineType::Hypnobrai) {
+			SpawnerClass = HEffect;
+		}
+		else if (SType == SerpentineType::Venomari) {
+			SpawnerClass = VEffect;
+		}
+		
+		if (SpawnerClass) {
+			AParticleSpawner* ParticleReference = GetWorld()->SpawnActor<AParticleSpawner>(SpawnerClass, GetTransform());
+			ParticleReference->SetFollow(this);
+		}
+		
 	}
 	
 }
@@ -184,6 +202,9 @@ void ASerpentine::HAttack(AICS4UFSE_CPPCharacter& player)
 
 void ASerpentine::VAttack(AICS4UFSE_CPPCharacter& player)
 {
-	AlreadySpawned = true;
-	GetWorld()->SpawnActor<AActor>(FakeSpawner, GetTransform());
+	if (!AlreadySpawned) {
+		AlreadySpawned = true;
+		GetWorld()->SpawnActor<AActor>(FakeSpawner, GetTransform());
+	}
+	
 }

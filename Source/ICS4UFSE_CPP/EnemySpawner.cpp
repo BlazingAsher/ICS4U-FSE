@@ -12,10 +12,10 @@ AEnemySpawner::AEnemySpawner()
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
 
-	PortalComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	PortalComponent->InitSphereRadius(50);
-	PortalComponent->SetCollisionProfileName(TEXT("Trigger"));
-	PortalComponent->SetupAttachment(RootComponent);
+	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	SphereComponent->InitSphereRadius(50);
+	SphereComponent->SetCollisionProfileName(TEXT("Trigger"));
+	SphereComponent->SetupAttachment(RootComponent);
 	
 }
 
@@ -37,7 +37,7 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 void AEnemySpawner::Spawn()
 {
-	FActorSpawnParameters SpawnParameters;
+	//FActorSpawnParameters SpawnParameters;
 
 	int spawnAmount = MinSpawnNum;
 	if (MinSpawnNum != MaxSpawnNum) {
@@ -50,9 +50,8 @@ void AEnemySpawner::Spawn()
 		SpawnLocation.X += (rand() % SpawnRadius * 2) - SpawnRadius;
 		SpawnLocation.Y += (rand() % SpawnRadius * 2) - SpawnRadius;
 
-		FRotator SpawnRotation;
+		GetWorld()->SpawnActor<AActor>(ToSpawn, SpawnLocation, FRotator(), FActorSpawnParameters());
 
-		GetWorld()->SpawnActor<AActor>(ToSpawn, SpawnLocation, SpawnRotation, SpawnParameters);
 	}
 
 	if (GEngine) {
