@@ -40,78 +40,105 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	// Max player health
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float MaxHealth;
 
+	// Curent player health
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float playerHealth;
 
+	// Armour hardness
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float ArmourHardness;
 
+	// Armour toughness
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		float ArmourToughness;
 
+	// Current player attack state (used for animations)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		int attackState;
 
+	// Current player energy
 	UPROPERTY(BlueprintReadOnly)
 		float playerEnergy;
 
+	// Curent player exp
 	UPROPERTY(BlueprintReadOnly)
 		int exp;
 
+	// Current player level exp percentage
 	UPROPERTY(BlueprintReadOnly)
 		float ExpPercent;
 
+	// Current player computed level
 	UPROPERTY(BlueprintReadOnly)
 		int ComputedLvl;
 
+	// Current player level progress
 	UPROPERTY(BlueprintReadOnly)
 		int PortalProgress;
 
+	// Current player special attack level
 	UPROPERTY(EditInstanceOnly)
 		int SpecialAttackProgress = 0;
 
+	// Current player selected special attack
 	UPROPERTY(BlueprintReadOnly)
 		TEnumAsByte<SpecialAttack> SelectedSpecial = SpecialAttack::None;
 
+	// Reference to pain volume to spawn during special attacks
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<APainVolume> PainVolumeBP;
 
+	// Spinjitsu particle
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<AParticleSpawner> SpinParticleSpawner;
 
+	// Tornado of creation particle
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<AParticleSpawner> TornadoParticleSpawner;
-
+	
+	// Elemental attack particle
 	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 		TSubclassOf<AParticleSpawner> ElementalParticleSpawner;
 
+	// Punching sound
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 		USoundCue* PunchSound;
 
+	// Special attack sound
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 		USoundCue* SpecialSound;
 
+	// Item pickup sound
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 		USoundCue* PickupSound;
 
+	// Death found
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 		USoundCue* DeathSound;
 
+	// Player launch direction
 	FVector Launch;
 
+	// Used for launch acceleration
 	float LaunchIncr, LaunchIncrIncr;
 
+	// Current player armour
 	FArmour PlayerArmour;
 
+	// The actor the player is stuck to
 	AActor* StuckTo;
-
+	
+	// Whether the player is hypnotized
 	bool IsHypnotized;
 
+	// Where the player last was when it was hypnotized (hypnotized teleport origin)
 	FVector HTPO;
 
+	// Player respawn point
 	UPROPERTY(EditAnywhere)
 	FVector SpawnPoint;
 
@@ -174,11 +201,11 @@ protected:
 
 protected:
 	// APawn interface
-	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
 protected:
+	// Timer handlers
 	FTimerHandle EnergyRegenTimerHandle;
 	FTimerDelegate EnergyRegenTimerDelegate;
 
@@ -212,7 +239,7 @@ public:
 	UFUNCTION()
 	int GetExpToNextLvl();
 
-	// Get amount of exp required to attain level (absolute)
+	// Calculates the exp difference between your next level and your current level
 	UFUNCTION()
 	int GetNextLvlRequiredExp();
 
@@ -256,7 +283,7 @@ public:
 	UFUNCTION()
 		void SetSpell(SpecialAttack toBeSet);
 
-	// Hypnotize the player (freeze)
+	// Hypnotize the player
 	void BeHypnotized(const AEnemy& enemy);
 
 	// Respawn the player

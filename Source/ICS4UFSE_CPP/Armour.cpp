@@ -52,6 +52,7 @@ float FArmour::CalcDmg(float Orig)
 
 float FArmour::operator -(float Orig)
 {
+    // Applies damage dealt to the armor and returns amound of damage that player should take
     float DmgDealt = CalcDmg(Orig);
     Tough = std::max(0.0f, Tough - Orig);
 

@@ -25,6 +25,8 @@ void AHealthPack::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Check if the player actor is within 100 cm
+	// If so heal the player and play the pick up sound
 	AICS4UFSE_CPPCharacter& player = dynamic_cast<AICS4UFSE_CPPCharacter&>(*GetWorld()->GetFirstPlayerController()->GetPawn());
 	if ((player.GetActorLocation() - GetActorLocation()).Size() < 100)
 	{

@@ -50,25 +50,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AActor>FakeSpawner;
 
-	bool AlreadySpawned;
+	bool AlreadySpawned; // Whether a Venomai fake spawner has already been created
 
-	UMaterial** Materials[8];
-
-	UPROPERTY(EditAnywhere)
-	UMaterial* CMaterial;
-
-	UPROPERTY(EditAnywhere)
-	UMaterial* FMaterial;
-
-	UPROPERTY(EditAnywhere)
-	UMaterial* HMaterial;
-
-	UPROPERTY(EditAnywhere)
-	UMaterial* VMaterial;
-
-	UPROPERTY(EditAnywhere)
-	UMaterial* DefaultMaterial;
-
+	// Particle effects
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AParticleSpawner> CEffect;
 

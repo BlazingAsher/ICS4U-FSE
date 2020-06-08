@@ -51,8 +51,6 @@ void APortalComponent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 			((AICS4UFSE_CPPCharacter*)OtherActor)->PlayPickupSound();
 		}
 
-
-
 		// Self destruct
 		Destroy();
 	}

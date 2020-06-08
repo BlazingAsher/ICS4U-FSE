@@ -15,10 +15,6 @@ ASerpentine::ASerpentine()
 	PrimaryActorTick.bCanEverTick = true;
 	AlreadySpawned = false;
 
-	void** tmp = reinterpret_cast<void**>(&CMaterial);
-	for (int i = 0; i < 8; i++)
-		Materials[i] = reinterpret_cast<UMaterial**>(tmp + std::min(4, i));
-
 }
 
 // Called when the game starts or when spawned

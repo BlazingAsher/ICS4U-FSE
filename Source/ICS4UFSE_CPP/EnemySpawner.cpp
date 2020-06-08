@@ -9,6 +9,8 @@ AEnemySpawner::AEnemySpawner()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Set up a mesh and collision component
+	// Easier to place during development, these will be empty in the game
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
 
@@ -24,6 +26,7 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Register the spawner timer
 	GetWorldTimerManager().SetTimer(spawnerHandle, this, &AEnemySpawner::Spawn, SpawnTickRate, true);
 	
 }
@@ -37,14 +40,15 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 void AEnemySpawner::Spawn()
 {
-	//FActorSpawnParameters SpawnParameters;
-
+	// Randomly select number of enemies to spawn
 	int spawnAmount = MinSpawnNum;
 	if (MinSpawnNum != MaxSpawnNum) {
 		spawnAmount+=rand() % (MaxSpawnNum - MinSpawnNum);
 	}
 
+	// Spawn the enemies
 	for (int i = 0; i < spawnAmount; ++i) {
+		// Randomly choose a position to spawn the actor
 		FVector SpawnLocation = GetActorLocation();
 
 		SpawnLocation.X += (rand() % SpawnRadius * 2) - SpawnRadius;
@@ -54,7 +58,7 @@ void AEnemySpawner::Spawn()
 
 	}
 
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(rand(), 1.f, FColor::Purple, "Spawn tick");
-	}
+	//if (GEngine) {
+	//	GEngine->AddOnScreenDebugMessage(rand(), 1.f, FColor::Purple, "Spawn tick");
+	//}
 }

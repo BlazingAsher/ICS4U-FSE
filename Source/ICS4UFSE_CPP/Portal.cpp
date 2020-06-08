@@ -12,18 +12,16 @@ APortal::APortal()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Set up the mesh and collision component
 	MyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyMesh"));
 	RootComponent = MyMesh;
 
-//	MyBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MyBoxComponent"));
-//	MyBoxComponent->InitBoxExtent(FVector(50, 50, 50));
-//	MyBoxComponent->SetCollisionProfileName("Trigger");
-//	MyBoxComponent->SetupAttachment(RootComponent);
 	PortalComponent = CreateDefaultSubobject<USphereComponent>(TEXT("PortalComponent"));
 	PortalComponent->InitSphereRadius(51);
 	PortalComponent->SetCollisionProfileName(TEXT("Trigger"));
 	PortalComponent->SetupAttachment(RootComponent);
 
+	// Initialize the materials to avoid memory access violations
 	OnMaterial = CreateDefaultSubobject<UMaterial>(TEXT("OnMaterial"));
 	OffMaterial = CreateDefaultSubobject<UMaterial>(TEXT("OffMaterial"));
 
@@ -33,8 +31,10 @@ APortal::APortal()
 void APortal::BeginPlay()
 {
 	Super::BeginPlay();
+	// Register overlap event handler
 	PortalComponent->OnComponentBeginOverlap.AddDynamic(this, &APortal::OnOverlapBegin);
 
+	// Set the material to off material
 	MyMesh->SetMaterial(0, OffMaterial);
 	
 }
@@ -63,7 +63,7 @@ void APortal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AA
 				player.LaunchPlayer((FVector(0, 0, 1) + player.GetActorLocation() - GetActorLocation()) * 10);
 
 				if (GEngine) {
-					GEngine->AddOnScreenDebugMessage(-10, 5.0f, FColor::Red, "This portal is not yet active!");
+					GEngine->AddOnScreenDebugMessage(rand(), 5.0f, FColor::Red, "This portal is not yet active!");
 				}
 			}
 		}
@@ -73,6 +73,7 @@ void APortal::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AA
 }
 
 void APortal::ActivatePortal() {
+	// Change the material and spawn the particle spawner
 	MyMesh->SetMaterial(0, OnMaterial);
 	FActorSpawnParameters SpawnParams;
 	GetWorld()->SpawnActor<AParticleSpawner>(ParticleSpawner, GetTransform(), SpawnParams);

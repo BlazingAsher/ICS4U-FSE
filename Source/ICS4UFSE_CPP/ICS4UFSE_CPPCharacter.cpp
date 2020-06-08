@@ -51,10 +51,6 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	//FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	//FollowCamera->SetupAttachment(GetMesh(), FName("head"));
-	//FollowCamera->AttachTo(GetMesh(), FName("head"));
-	//FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
 
 	FollowCamera->bUsePawnControlRotation = true; // Camera does not rotate relative to arm
 
@@ -64,18 +60,24 @@ AICS4UFSE_CPPCharacter::AICS4UFSE_CPPCharacter()
 	// Set health and armour defaults
 	exp = 0;
 
+	// Initialize player health
 	MaxHealth = 150.0f;
 	playerHealth = MaxHealth;
 
+	// Initialize player armour
 	ArmourHardness = PlayerArmour.Hardness();
 	ArmourToughness = PlayerArmour.Toughness();
 
+	// Set animation to idle
 	attackState = 0;
 
+	// Initialize player energy
 	playerEnergy = 0.5f;
 
+	// Player is not stuck to any actor
 	StuckTo = nullptr;
 
+	// Player is not hypnotized
 	IsHypnotized = false;
 
 }
@@ -84,10 +86,12 @@ void AICS4UFSE_CPPCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Transform the camera view
 	FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("head"));
 	FollowCamera->RelativeLocation = FVector(0.000000, 1.000000, 25.000000);  // left,right - up,down - fwd, back
 	FollowCamera->RelativeRotation = FRotator(90.000000, 0.000000, -90.000000);
 
+	// Bind a function to the timer delegate and register the energy addition timer
 	EnergyRegenTimerDelegate.BindUFunction(this, FName("AddEnergy"), 0.1f);
 	GetWorldTimerManager().SetTimer(EnergyRegenTimerHandle, EnergyRegenTimerDelegate, 5.f, true);
 }
@@ -159,17 +163,20 @@ void AICS4UFSE_CPPCharacter::Tick(float DeltaTime)
 
 	Super::Tick(DeltaTime);
 
+	// Player is being launched
 	if (LaunchIncr < 60 * LaunchIncrIncr)
 	{
 		SetActorLocation(GetActorLocation() + Launch * LaunchIncr);
 		LaunchIncr += LaunchIncrIncr;
 	}
 
+	// Player is hypnotized
 	if (IsHypnotized && !StuckTo)
 	{
 
 		using namespace std::chrono;
 
+		// random number generator using clock
 		auto ct = high_resolution_clock::now().time_since_epoch();
 		long long ns = duration_cast<microseconds>(ct).count();
 
@@ -186,12 +193,13 @@ void AICS4UFSE_CPPCharacter::Tick(float DeltaTime)
 			ns = duration_cast<microseconds>(ct).count();
 			float dist = ns % 200;
 
+			// set the player to that location
 			SetActorLocation(HTPO + FVector(std::cos(theta) * dist, std::sin(theta) * dist, 50));
 			SetActorRotation({ 0, theta, 0 });
 		}
 
 	}
-	else if (StuckTo)
+	else if (StuckTo) // slowly suffocate the player
 		ApplyDamage(0.1, DmgSuffocate, StuckTo);
 
 }
@@ -203,10 +211,10 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 	float requiredEnergy = (specialID + 1) / 4.f; // calculate required player energy
 	
 	// debugging
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(-18, 5.0f, FColor::Red, FString::FromInt(specialID));
-		GEngine->AddOnScreenDebugMessage(-37, 5.0f, FColor::Red, FString::FromInt(requiredEnergy*100));
-	}
+	//if (GEngine) {
+	//	GEngine->AddOnScreenDebugMessage(-18, 5.0f, FColor::Red, FString::FromInt(specialID));
+	//	GEngine->AddOnScreenDebugMessage(-37, 5.0f, FColor::Red, FString::FromInt(requiredEnergy*100));
+	//}
 
 	// Proceed if player has selected an attack, has the required energy, and we have an instance of a Pain VL to spawn
 	if (SelectedSpecial != SpecialAttack::None && playerEnergy >= requiredEnergy && PainVolumeBP) {
@@ -240,11 +248,12 @@ void AICS4UFSE_CPPCharacter::OnSpecialAttack()
 		if (SpawnerClass) {
 			AParticleSpawner* ParticleSpawnerInstance = GetWorld()->SpawnActor<AParticleSpawner>(SpawnerClass, volumeSpawnLocation, FRotator(), SpawnParams);
 			ParticleSpawnerInstance->SetFollow(this);
-			if (GEngine) {
-				GEngine->AddOnScreenDebugMessage(-12, 5.0f, FColor::Red, "spawned particle");
-			}
+			//if (GEngine) {
+			//	GEngine->AddOnScreenDebugMessage(-12, 5.0f, FColor::Red, "spawned particle");
+			//}
 		}
 
+		// Play the special attack sound
 		UGameplayStatics::PlaySound2D(GetWorld(), SpecialSound, 1.0f, 1.0f);
 
 		// Deduct energy from player
@@ -283,6 +292,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		return;
 	}
 
+	// Find enemies to attack
 	TArray<AActor*>actors;
 	AEnemy* aep;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TSubclassOf<AActor>(AEnemy::StaticClass()), actors);
@@ -300,7 +310,7 @@ void AICS4UFSE_CPPCharacter::EndAttack()
 		{
 
 			// deal damage to the enemy
-			//aep->ApplyDamage(GetLvl() + 1, DmgType::DmgMelee, this);
+			// more levels = more damage
 			aep->ApplyDamage(GetLvl() * 15 + 30, DmgType::DmgMelee, this);
 			// knock the enemy back a bit
 			aep->SetActorRotation(aep->GetActorRotation());
@@ -319,7 +329,7 @@ void AICS4UFSE_CPPCharacter::OnUse()
 
 void AICS4UFSE_CPPCharacter::EndUse()
 {
-
+	// Check if player clicked a door
 	TArray<AActor*>actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), actors);
 
@@ -400,6 +410,7 @@ void AICS4UFSE_CPPCharacter::ApplyDamage(float Damage, DmgType Type, AActor* src
 	else
 		playerHealth = std::max(0.0f, playerHealth - Damage);
 	
+	// Reduce armor values due to damage
 	ArmourHardness = PlayerArmour.Hardness();
 	ArmourToughness = PlayerArmour.Toughness();
 
@@ -428,18 +439,21 @@ int AICS4UFSE_CPPCharacter::GetLvl()
 	if (x == 0)
 		return ComputedLvl = 0;
 	else
+		// Calculates the level from experience (derived from cubic formula so that progression gets harder)
 		return ComputedLvl = (int)floor(cbrt(x / 2 + sqrt(27 * x * x - 4) / 6 / sqrt(3)) + cbrt(x / 2 - sqrt(27 * x * x - 4) / 6 / sqrt(3)) - 1);
 }
 
 int AICS4UFSE_CPPCharacter::GetExpToNextLvl()
 {
 	int lvl = GetLvl() + 1;
+	// Calculates the exp needed to get the next level (derived from cubic formula so that progression gets harder)
 	return lvl * lvl * lvl + 3 * lvl * lvl + 2 * lvl - exp;
 }
 
 int AICS4UFSE_CPPCharacter::GetNextLvlRequiredExp()
 {
 	int lvl = GetLvl();
+	// calculates the exp difference between your next level and your current level (derived from cubic formula so that progression gets harder)
 	return 3 * lvl * lvl + 9 * lvl + 6;
 }
 
@@ -463,11 +477,14 @@ int AICS4UFSE_CPPCharacter::GetComputedLvl()
 void AICS4UFSE_CPPCharacter::AddPortalProgress()
 {
 	PortalProgress += 1;
+	// Check if player has all the pieces
 	if (PortalProgress == AICS4UFSE_CPPCharacter::PORTAL_NUM_PIECES) {
+		// Inform the player
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-2, 5.0f, FColor::Blue, "Portal spawning!");
 		}
 
+		// Activate the portal
 		for (TObjectIterator<APortal> Itr; Itr; ++Itr)
 		{
 			if (Itr->IsA(APortal::StaticClass()))
@@ -491,6 +508,7 @@ void AICS4UFSE_CPPCharacter::Heal(float hp)
 
 void AICS4UFSE_CPPCharacter::LaunchPlayer(FVector LaunchDirection)
 {
+	// Launch the player in the given direction
 	Launch = LaunchDirection / LaunchDirection.Size();
 	LaunchIncr = LaunchDirection.Size() / 3600;
 	LaunchIncrIncr = LaunchDirection.Size() / 1800;
@@ -500,26 +518,9 @@ void AICS4UFSE_CPPCharacter::AddSpell() {
 	SpecialAttackProgress++;
 }
 
-//TEnumAsByte<SpecialAttack>& operator++(TEnumAsByte<SpecialAttack>& x)
-//{
-//	x = (SpecialAttack)(x.GetValue() + 1);
-//	return x;
-//}
-//
-//TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, const TEnumAsByte<SpecialAttack>& y)
-//{
-//	x = (SpecialAttack)(x.GetValue() % y.GetValue());
-//	return x;
-//}
-//
-//TEnumAsByte<SpecialAttack>& operator%=(TEnumAsByte<SpecialAttack>& x, int y)
-//{
-//	x %= TEnumAsByte<SpecialAttack>(y);
-//	return x;
-//}
-
 void AICS4UFSE_CPPCharacter::CycleSpell() {
 	
+	// Loop through all spells that player has access to 
 	if (SelectedSpecial == SpecialAttack::None && SpecialAttackProgress > 0) {
 		SelectedSpecial = SpecialAttack::Spin;
 	}
@@ -549,6 +550,7 @@ void AICS4UFSE_CPPCharacter::SetSpell(SpecialAttack toBeSet) {
 
 void AICS4UFSE_CPPCharacter::BeHypnotized(const AEnemy& enemy)
 {
+	// Checks if player has eye contact with the enemy (requirement to be hypnotized)
 	float theta = std::acos(GetActorRotation().Vector() | enemy.GetActorRotation().Vector()) * 180 / 3.1415926535897932;
 	HTPO = GetActorLocation();
 	if (theta <= 9)
@@ -557,12 +559,13 @@ void AICS4UFSE_CPPCharacter::BeHypnotized(const AEnemy& enemy)
 
 void AICS4UFSE_CPPCharacter::Respawn()
 {
+	// Play death sound
 	UGameplayStatics::PlaySound2D(GetWorld(), DeathSound, 1.0f, 1.0f);
+
+	// Reset player
 	SetActorLocation(SpawnPoint);
 	SetActorRotation({ 0, 0, 0 });
 	exp = 0;
-	//PortalProgress = 0;
-	//SpecialAttackProgress = 0;
 	playerHealth = MaxHealth;
 	attackState = 0;
 	playerEnergy = 0.5f;

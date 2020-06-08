@@ -48,6 +48,7 @@ void ASpellLearner::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 			if (GEngine) {
 				GEngine->AddOnScreenDebugMessage(-110, 5.0f, FColor::Green, "You learned a new spell!");
 			}
+			// Self destruct
 			Destroy();
 		}
 
