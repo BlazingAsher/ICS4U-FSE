@@ -34,8 +34,13 @@ void ASerpentine::BeginPlay()
 	if (ns >= 4)
 		SType = SerpentineType::Basic;
 	else
+	{
 		SType = (SerpentineType)(SerpentineType::Basic + ns);
-
+		TSubclassOf<AParticleSpawner>* TBS = &CEffect + ns;
+		AParticleSpawner& ParticleReference = *GetWorld()->SpawnActor<AParticleSpawner>(*TBS, GetTransform());
+		ParticleReference.SetFollow(this);
+	}
+	
 }
 
 extern template class TArray<AActor*>;

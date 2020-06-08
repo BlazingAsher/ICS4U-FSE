@@ -38,7 +38,7 @@ void ADoor::Tick(float DeltaTime)
 			// gets the location and rotation
 			FRotator ThisRot = GetActorRotation();
 			FVector ThisPos = GetActorLocation();
-			FRotator PivDiff = (ThisPos - Pivot).ToOrientationRotator();
+			FRotator PivDiff = (-Pivot).ToOrientationRotator();
 
 			if (YawPos == IsOpen)
 				ThisRot.Yaw += MaxTurn / Weight;

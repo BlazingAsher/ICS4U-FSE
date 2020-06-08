@@ -67,7 +67,7 @@ protected:
 	float Weight;
 
 	UPROPERTY(EditAnywhere)
-	// The point where the door is turned about
+	// The relative point where the door is turned about
 	FVector Pivot;
 
 };

@@ -7,6 +7,7 @@
 #include "ICS4UFSE_CPPCharacter.h"
 #include "GameFramework/Actor.h"
 #include <ICS4UFSE_CPP\SerpentineType.h>
+#include <ICS4UFSE_CPP\ParticleSpawner.h>
 #include "Serpentine.generated.h"
 
 UCLASS()
@@ -67,5 +68,17 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	UMaterial* DefaultMaterial;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AParticleSpawner> CEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AParticleSpawner> FEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AParticleSpawner> HEffect;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AParticleSpawner> VEffect;
 
 };

@@ -20,8 +20,8 @@ void ABoss::BeginPlay()
 
 	mxhp = 3000;
 	hp = mxhp;
-	MaxDmg = 3;
-	MinDmg = 3;
+	MaxDmg = 300;
+	MinDmg = 300;
 	ms = 3;
 	MaxAtkCldn = 30;
 
